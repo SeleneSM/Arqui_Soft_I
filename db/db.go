@@ -1,8 +1,8 @@
 package db
 
 import (
-	userClient "Login/clients/user"
-	"Login/model"
+	userClient "Arqui_Soft_I/clients/user"
+	"Arqui_Soft_I/model"
 
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -14,7 +14,7 @@ var (
 	err error
 )
 
-func insertInitialData() {
+/*func insertInitialData() {
 	user := model.User{
 		Username: "Admin",
 		Password: "Admin",
@@ -24,12 +24,12 @@ func insertInitialData() {
 	}
 
 	log.Info("Initial values inserted")
-}
+}*/
 
 func init() {
-	DBName := "Login"
+	DBName := "cursify"
 	DBUser := "root"
-	DBPass := "root"
+	DBPass := "Luchiucc2024."
 	DBHost := "127.0.0.1"
 
 	db, err = gorm.Open("mysql", DBUser+":"+DBPass+"@tcp("+DBHost+":3306)/"+DBName+"?charset=utf8&parseTime=True")
@@ -48,7 +48,7 @@ func StartDbEngine() {
 
 	db.AutoMigrate(&model.User{})
 
-	insertInitialData()
+	//insertInitialData()
 
 	log.Info("Finishing Migration Database Tables")
 }

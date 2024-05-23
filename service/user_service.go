@@ -1,8 +1,8 @@
 package services
 
 import (
-	userClient "Login/clients/user"
-	"Login/dto"
+	userClient "Arqui_Soft_I/clients/user"
+	"Arqui_Soft_I/dto"
 )
 
 // Creo la estructura

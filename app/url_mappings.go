@@ -1,7 +1,7 @@
 package app
 
 import (
-	userController "Login/controller/user"
+	userController "Arqui_Soft_I/controller/user"
 )
 
 // Endpoints

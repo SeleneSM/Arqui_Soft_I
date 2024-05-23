@@ -1,8 +1,8 @@
 package main
 
 import (
-	app "Login/app"
-	"Login/db"
+	app "Arqui_Soft_I/app"
+	"Arqui_Soft_I/db"
 )
 
 func main() {
