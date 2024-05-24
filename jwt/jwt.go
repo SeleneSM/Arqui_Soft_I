@@ -3,8 +3,7 @@ package jwtToken
 import (
 	"Arqui_Soft_I/dto"
 
-	"github.com/dgrijalva/jwt-go"
-	//"github.com/golang-jwt/jwt/v4"
+	"github.com/golang-jwt/jwt/v4"
 )
 
 func GenerateUserToken(userDto dto.UserDto) (string, error) {

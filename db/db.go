@@ -7,6 +7,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	log "github.com/sirupsen/logrus"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var (
@@ -14,17 +15,22 @@ var (
 	err error
 )
 
-/*func insertInitialData() {
+func insertInitialData() {
 	user := model.User{
 		Username: "Admin",
-		Password: "Admin",
+		Password: "1234",
 	}
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+	if err != nil {
+		log.Error("Error al hashear la password:", err.Error())
+	}
+	user.Password = string(hashedPassword)
 	if err := db.Create(&user).Error; err != nil {
-		log.Error("Failed to insert user: ", err.Error())
+		log.Error("Failed to insert user:", err.Error())
 	}
 
 	log.Info("Initial values inserted")
-}*/
+}
 
 func init() {
 	DBName := "cursify"

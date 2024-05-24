@@ -2,6 +2,7 @@ package controller
 
 import (
 	"Arqui_Soft_I/dto"
+	jwtToken "Arqui_Soft_I/jwt"
 	service "Arqui_Soft_I/service"
 	"net/http"
 
@@ -21,15 +22,31 @@ func UserAuth(c *gin.Context) {
 
 	var auth bool
 	var id int
-	auth, id = service.UserService.UserAuth(userDto)
-	if auth == true {
+	var rol string
+	auth, rol, id = service.UserService.UserAuth(userDto)
+	if auth {
 		userDto.ID = id
-	}
+		userDto.Rol = rol
 
-	c.JSON(http.StatusAccepted, gin.H{
-		"auth":    auth,
-		"user_id": id,
-	})
+		token, err := jwtToken.GenerateUserToken(userDto)
+		if err != nil {
+			log.Error(err.Error())
+			c.JSON(http.StatusBadRequest, err.Error())
+			return
+		}
+
+		c.JSON(http.StatusAccepted, gin.H{
+			"auth":    true,
+			"user_id": id,
+			"rol":     rol,
+			"token":   token,
+		})
+	} else {
+		c.JSON(http.StatusUnauthorized, gin.H{
+			"auth":    false,
+			"message": "Invalid email or password",
+		})
+	}
 }
 
 /*func UserAuth(c *gin.Context) {
