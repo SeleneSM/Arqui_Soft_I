@@ -17,8 +17,11 @@ var (
 
 func insertInitialData() {
 	user := model.User{
-		Username: "Admin",
-		Password: "1234",
+		Username: "larapereyra",
+		Password: "1111",
+		Rol:      "Estudiante",
+		Nombre:   "Lara",
+		Apellido: "Pereyra",
 	}
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
@@ -54,7 +57,7 @@ func StartDbEngine() {
 
 	db.AutoMigrate(&model.User{})
 
-	//insertInitialData()
+	insertInitialData()
 
 	log.Info("Finishing Migration Database Tables")
 }
