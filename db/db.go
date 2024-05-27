@@ -4,6 +4,7 @@ import (
 	userClient "Arqui_Soft_I/clients/user"
 	"Arqui_Soft_I/model"
 
+	"errors"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	log "github.com/sirupsen/logrus"
@@ -16,23 +17,59 @@ var (
 )
 
 func insertInitialData() {
-	user := model.User{
-		Username: "larapereyra",
-		Password: "1111",
-		Rol:      "Estudiante",
-		Nombre:   "Lara",
-		Apellido: "Pereyra",
+	users := []model.User{
+		{
+			Username: "larapereyra",
+			Password: "1111",
+			Rol:      "Estudiante",
+			Nombre:   "Lara",
+			Apellido: "Pereyra",
+		},
+		{
+			Username: "selenesaad",
+			Password: "2222",
+			Rol:      "Estudiante",
+			Nombre:   "Selene",
+			Apellido: "Saad",
+		},
+		{
+			Username: "luanarolon",
+			Password: "3333",
+			Rol:      "Administrador",
+			Nombre:   "Luana",
+			Apellido: "Rolon",
+		},
+		{
+			Username: "luciaangiolini",
+			Password: "4444",
+			Rol:      "Estudiante",
+			Nombre:   "Lucia",
+			Apellido: "Angiolini",
+		},
 	}
-	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
-	if err != nil {
-		log.Error("Error al hashear la password:", err.Error())
-	}
-	user.Password = string(hashedPassword)
-	if err := db.Create(&user).Error; err != nil {
-		log.Error("Failed to insert user:", err.Error())
+	for _, user := range users {
+		var existingUser model.User
+		if err := db.Where("Username = ?", user.Username).First(&existingUser).Error; err == nil {
+			log.Info("User already exists with Username:", user.Username)
+			continue
+		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error("Failed to query user:", err.Error())
+			continue
+		}
+		hashedPassword, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
+		if err != nil {
+			log.Error("Error al hashear la password:", err.Error())
+			continue
+		}
+		user.Password = string(hashedPassword)
+
+		if err := db.Create(&user).Error; err != nil {
+			log.Error("Failed to insert user:", err.Error())
+		}
 	}
 
 	log.Info("Initial values inserted")
+
 }
 
 func init() {
