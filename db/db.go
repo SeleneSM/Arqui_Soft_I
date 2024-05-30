@@ -1,7 +1,10 @@
 package db
 
 import (
+	cursoClient "Arqui_Soft_I/clients/curso"
+	materiaClient "Arqui_Soft_I/clients/materia"
 	userClient "Arqui_Soft_I/clients/user"
+
 	"Arqui_Soft_I/model"
 	"time"
 
@@ -103,7 +106,7 @@ func insertInitialData() {
 	cursos := []model.Curso{
 		{
 			Fecha_Inicio: time.Date(2024, time.May, 1, 0, 0, 0, 0, time.UTC),
-			Fecha_Final:  time.Date(2024, time.June, 30, 0, 0, 0, 0, time.UTC),
+			Fecha_Fin:    time.Date(2024, time.June, 30, 0, 0, 0, 0, time.UTC),
 			MateriaID:    2,
 		},
 		{
@@ -116,6 +119,20 @@ func insertInitialData() {
 			Fecha_Fin:    time.Date(2024, time.September, 31, 0, 0, 0, 0, time.UTC),
 			MateriaID:    2,
 		},
+	}
+
+	for _, curso := range cursos {
+		var existingCurso model.Curso
+		if err := db.Where("id = ?", curso.ID).First(&existingCurso).Error; err == nil {
+			log.Info("Curso already exists with id:", curso.ID)
+			continue
+		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
+			log.Error("Failed to query curso:", err.Error())
+			continue
+		}
+		if err := db.Create(&curso).Error; err != nil {
+			log.Error("Failed to insert curso:", err.Error())
+		}
 	}
 
 	log.Info("Initial values inserted")
@@ -138,11 +155,16 @@ func init() {
 	}
 
 	userClient.Db = db
+	cursoClient.Db = db
+	materiaClient.Db = db
+
 }
 
 func StartDbEngine() {
 
 	db.AutoMigrate(&model.User{})
+	db.AutoMigrate(&model.Materia{})
+	db.AutoMigrate(&model.Curso{})
 
 	insertInitialData()
 
