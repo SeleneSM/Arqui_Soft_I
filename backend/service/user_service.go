@@ -1,8 +1,8 @@
 package services
 
 import (
-	userClient "Arqui_Soft_I/clients/user"
-	"Arqui_Soft_I/dto"
+	userClient "Arqui_Soft_I/backend/clients/user"
+	"Arqui_Soft_I/backend/dto"
 
 	"golang.org/x/crypto/bcrypt"
 )

@@ -1,9 +1,9 @@
 package controller
 
 import (
-	"Arqui_Soft_I/dto"
-	jwtToken "Arqui_Soft_I/jwt"
-	service "Arqui_Soft_I/service"
+	"Arqui_Soft_I/backend/dto"
+	jwtToken "Arqui_Soft_I/backend/jwt"
+	service "Arqui_Soft_I/backend/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
