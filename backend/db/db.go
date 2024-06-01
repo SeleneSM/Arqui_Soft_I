@@ -76,16 +76,22 @@ func insertInitialData() {
 
 	materias := []model.Materia{
 		{
-			Nombre:   "Python",
-			Duracion: 3,
+			Nombre:         "Python",
+			Duracion:       3,
+			Descripcion:    "Curso online de Python para principiantes. Aprende desde lo básico hasta conceptos avanzados, incluyendo estructuras de datos, funciones, y programación orientada a objetos, a través de ejercicios prácticos y proyectos reales.",
+			Palabras_clave: "Programacion, Phyton, software, desarrollo",
 		},
 		{
-			Nombre:   "C++",
-			Duracion: 2,
+			Nombre:         "C++",
+			Duracion:       2,
+			Descripcion:    "Curso online de C++ para todos los niveles. Domina desde la sintaxis básica hasta la programación avanzada, incluyendo manejo de memoria, POO, y algoritmos eficientes, a través de ejemplos prácticos y proyectos desafiantes",
+			Palabras_clave: "C++, Sintaxis, Algoritmo, Memoria",
 		},
 		{
-			Nombre:   "R",
-			Duracion: 4,
+			Nombre:         "R",
+			Duracion:       4,
+			Descripcion:    "Curso online de R para análisis de datos. Aprende desde los fundamentos de R hasta técnicas avanzadas de visualización y modelado estadístico, aplicando tus conocimientos en proyectos prácticos y estudios de caso reales",
+			Palabras_clave: "Analisis de datos, estadistica, modelado, visualizacion",
 		},
 	}
 
@@ -107,24 +113,24 @@ func insertInitialData() {
 		{
 			Fecha_Inicio: time.Date(2024, time.May, 1, 0, 0, 0, 0, time.UTC),
 			Fecha_Fin:    time.Date(2024, time.June, 30, 0, 0, 0, 0, time.UTC),
-			MateriaID:    2,
+			Materia_id:   2,
 		},
 		{
 			Fecha_Inicio: time.Date(2024, time.August, 1, 0, 0, 0, 0, time.UTC),
 			Fecha_Fin:    time.Date(2024, time.October, 31, 0, 0, 0, 0, time.UTC),
-			MateriaID:    1,
+			Materia_id:   1,
 		},
 		{
 			Fecha_Inicio: time.Date(2024, time.August, 1, 0, 0, 0, 0, time.UTC),
 			Fecha_Fin:    time.Date(2024, time.September, 31, 0, 0, 0, 0, time.UTC),
-			MateriaID:    2,
+			Materia_id:   2,
 		},
 	}
 
 	for _, curso := range cursos {
 		var existingCurso model.Curso
-		if err := db.Where("id = ?", curso.ID).First(&existingCurso).Error; err == nil {
-			log.Info("Curso already exists with id:", curso.ID)
+		if err := db.Where("Fecha_Inicio = ? AND Fecha_fin = ? AND Materia_id = ?", curso.Fecha_Inicio, curso.Fecha_Fin, curso.Materia_id).First(&existingCurso).Error; err == nil {
+			log.Info("Curso already exists with id:", curso.Fecha_Inicio, curso.Fecha_Fin, curso.Materia_id)
 			continue
 		} else if !errors.Is(err, gorm.ErrRecordNotFound) {
 			log.Error("Failed to query curso:", err.Error())
