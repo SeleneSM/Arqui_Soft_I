@@ -8,5 +8,5 @@ import (
 // Endpoints
 func mapUrls() {
 	router.GET("users/auth", userController.UserAuth)
-	router.GET("materia/search", materiaControler.SearchMateria)
+	router.GET("materia/search/:palabras_clave", materiaControler.SearchMateria)
 }

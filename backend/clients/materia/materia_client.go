@@ -22,7 +22,7 @@ func SearchMateria(keyword string) model.Materias {
 	var materias model.Materias
 	search_pattern := "%" + keyword + "%"
 
-	Db.Where("nombre LIKE ? OR descripcion LIKE ? OR palabras_clave LIKE ?", search_pattern, search_pattern, search_pattern).First(&materias)
+	Db.Where("nombre LIKE ? OR descripcion LIKE ? OR palabras_clave LIKE ?", search_pattern, search_pattern, search_pattern).Find(&materias)
 	log.Debug("Materias disponibles: ", materias)
 
 	return materias

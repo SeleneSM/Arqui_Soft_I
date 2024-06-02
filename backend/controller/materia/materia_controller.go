@@ -24,9 +24,10 @@ import (
 */
 func SearchMateria(c *gin.Context) {
 	var materiasDto dto.Materias
-	log.Debug("Materia keyword to load: " + c.Param("palabras_clave"))
 
 	palabras_clave := c.Param("palabras_clave")
+	log.Debug("Materia keyword to load: " + c.Param("palabras_clave"))
+
 	materiasDto, err := service.MateriasService.SearchMateria(palabras_clave)
 
 	if err != nil {
