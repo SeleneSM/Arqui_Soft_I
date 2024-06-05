@@ -2,26 +2,29 @@ package controller
 
 import (
 	"Arqui_Soft_I/backend/dto"
-	service "Arqui_Soft_I/backend/service"
+	"Arqui_Soft_I/backend/service"
 	"net/http"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	log "github.com/sirupsen/logrus"
 )
 
-/*
-	func GetHotels(c *gin.Context) {
-		var hotelsDto dto.HotelsDto
-		hotelsDto, err := service.HotelService.GetHotels()
+func GetMateriaById(c *gin.Context) {
+	log.Debug("Materia id to load: " + c.Param("id"))
 
-		if err != nil {
-			c.JSON(err.Status(), err)
-			return
-		}
+	id, _ := strconv.Atoi(c.Param("id"))
+	var materiaDto dto.MateriaDto
 
-		c.JSON(http.StatusOK, hotelsDto)
+	materiaDto, err := service.MateriaService.GetMateriaById(id)
+
+	if err != nil {
+		c.JSON(err.Status(), err)
+		return
 	}
-*/
+
+	c.JSON(http.StatusOK, materiaDto)
+}
 func SearchMateria(c *gin.Context) {
 	var materiasDto dto.Materias
 

@@ -17,3 +17,10 @@ func GetCursoById(id int) model.Curso {
 
 	return curso
 }
+
+func GetCursos() model.Cursos {
+	var cursos model.Cursos
+	Db.Find(&cursos)
+	log.Debug("Cursos: ", cursos)
+	return cursos
+}

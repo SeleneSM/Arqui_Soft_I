@@ -20,24 +20,6 @@ func init() {
 	MateriasService = &materiaService{}
 }
 
-/*
-func (s *hotelService) GetHotels() (dto.HotelsDto, e.ApiError) {
-
-		var hotels model.Hotels = hotelClient.GetHotels()
-		var hotelsDto dto.HotelsDto
-
-		for _, hotel := range hotels {
-			var hotelDto dto.HotelDto
-			hotelDto.Name = hotel.Nombre
-			hotelDto.CantHabitaciones = hotel.CantHab
-			hotelDto.Id = hotel.ID
-			hotelDto.Desc = hotel.Descripcion
-			hotelsDto = append(hotelsDto, hotelDto)
-		}
-
-		return hotelsDto, nil
-	}
-*/
 func (s *materiaService) SearchMateria(palabras_clave string) (dto.Materias, e.ApiError) {
 
 	var materias model.Materias = materiaClient.SearchMateria(palabras_clave)
@@ -54,4 +36,22 @@ func (s *materiaService) SearchMateria(palabras_clave string) (dto.Materias, e.A
 	}
 
 	return materiasDto, nil
+}
+
+func (s *materiaService) GetMateriaById(id int) (dto.MateriaDto, e.ApiError) {
+
+	var materia model.Materia = materiaClient.GetMateriaById(id)
+	var materiaDto dto.MateriaDto
+
+	if materia.ID == 0 {
+		return materiaDto, e.NewBadRequestApiError("materia not found")
+	}
+
+	materiaDto.ID = materia.ID
+	materiaDto.Nombre = materia.Nombre
+	materiaDto.Duracion = materia.Duracion
+	materiaDto.Descripcion = materia.Descripcion
+	materiaDto.Palabras_clave = materia.Palabras_clave
+
+	return materiaDto, nil
 }
