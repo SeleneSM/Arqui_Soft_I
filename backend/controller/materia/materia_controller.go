@@ -2,7 +2,7 @@ package controller
 
 import (
 	"Arqui_Soft_I/backend/dto"
-	"Arqui_Soft_I/backend/service"
+	service "Arqui_Soft_I/backend/service"
 	"net/http"
 	"strconv"
 
@@ -31,7 +31,7 @@ func SearchMateria(c *gin.Context) {
 	palabras_clave := c.Param("palabras_clave")
 	log.Debug("Materia keyword to load: " + c.Param("palabras_clave"))
 
-	materiasDto, err := service.MateriasService.SearchMateria(palabras_clave)
+	materiasDto, err := service.MateriaService.SearchMateria(palabras_clave)
 
 	if err != nil {
 		c.JSON(err.Status(), err)

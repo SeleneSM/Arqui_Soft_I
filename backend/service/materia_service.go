@@ -10,14 +10,15 @@ import (
 type materiaService struct{}
 type materiaServiceInterface interface {
 	SearchMateria(palabras_clave string) (dto.Materias, e.ApiError)
+	GetMateriaById(id int) (dto.MateriaDto, e.ApiError)
 }
 
 var (
-	MateriasService materiaServiceInterface
+	MateriaService materiaServiceInterface
 )
 
 func init() {
-	MateriasService = &materiaService{}
+	MateriaService = &materiaService{}
 }
 
 func (s *materiaService) SearchMateria(palabras_clave string) (dto.Materias, e.ApiError) {
