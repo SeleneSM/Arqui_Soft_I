@@ -4,7 +4,7 @@ import (
 	"Arqui_Soft_I/backend/dto"
 
 	//jwt "github.com/dgrijalva/jwt-go"
-	"github.com/golang-jwt/jwt/v4"
+	jwt "github.com/golang-jwt/jwt/v4"
 )
 
 func GenerateUserToken(userDto dto.UserDto) (string, error) {

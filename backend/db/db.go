@@ -2,6 +2,7 @@ package db
 
 import (
 	cursoClient "Arqui_Soft_I/backend/clients/curso"
+	incripcionClient "Arqui_Soft_I/backend/clients/inscripcion"
 	materiaClient "Arqui_Soft_I/backend/clients/materia"
 	userClient "Arqui_Soft_I/backend/clients/user"
 
@@ -141,6 +142,17 @@ func insertInitialData() {
 		}
 	}
 
+	inscripcion := model.Inscripcion{
+
+		ID_curso:          1,
+		ID_usuario:        2,
+		Fecha_Inscripcion: time.Date(2024, time.September, 23, 0, 0, 0, 0, time.UTC),
+	}
+
+	if err := db.Create(&inscripcion).Error; err != nil {
+		log.Error("Failed to insert curso:", err.Error())
+	}
+
 	log.Info("Initial values inserted")
 
 }
@@ -148,7 +160,7 @@ func insertInitialData() {
 func init() {
 	DBName := "cursify"
 	DBUser := "root"
-	DBPass := "Luchiucc2024."
+	DBPass := "root"
 	DBHost := "127.0.0.1"
 
 	db, err = gorm.Open("mysql", DBUser+":"+DBPass+"@tcp("+DBHost+":3306)/"+DBName+"?charset=utf8&parseTime=True")
@@ -163,6 +175,7 @@ func init() {
 	userClient.Db = db
 	cursoClient.Db = db
 	materiaClient.Db = db
+	incripcionClient.Db = db
 
 }
 
@@ -171,6 +184,7 @@ func StartDbEngine() {
 	db.AutoMigrate(&model.User{})
 	db.AutoMigrate(&model.Materia{})
 	db.AutoMigrate(&model.Curso{})
+	db.AutoMigrate(&model.Inscripcion{})
 
 	insertInitialData()
 
