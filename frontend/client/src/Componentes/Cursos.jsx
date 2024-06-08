@@ -30,7 +30,7 @@ function Cursos(props) {
       
     const realizarInscripcion = () => {
         fetch("http://localhost:8090/inscripciones", {
-          method: "POST",
+          method: "POST",          
           headers: {
             "Content-Type": "application/json",
           },
