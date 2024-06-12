@@ -33,6 +33,8 @@ func (s *cursoService) GetCursos() (dto.Cursos, e.ApiError) {
 		cursoDto.Fecha_Inicio = curso.Fecha_Inicio
 		cursoDto.Fecha_Fin = curso.Fecha_Fin
 		cursoDto.Materia_id = curso.Materia_id
+		cursoDto.Requisitos = curso.Requisitos
+		cursoDto.Instructor = curso.Instructor
 		cursosDto = append(cursosDto, cursoDto)
 	}
 

@@ -10,7 +10,7 @@ import (
 // Endpoints
 func mapUrls() {
 	//Get
-	router.GET("users/auth", userController.UserAuth)
+
 	router.GET("materia/search/:palabras_clave", materiaController.SearchMateria)
 	router.GET("inscripciones_por_usuario/:id_usuario", inscripcionController.GetInscripcionesByUser)
 	router.GET("/cursos", cursoController.GetCursos)
@@ -18,5 +18,6 @@ func mapUrls() {
 
 	//Post
 	router.POST("inscribir", inscripcionController.InscribirUsuario)
+	router.POST("users/auth", userController.UserAuth)
 	//router.POST("cursos", cursoController.)
 }

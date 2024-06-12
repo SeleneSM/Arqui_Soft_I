@@ -9,13 +9,18 @@ import (
 
 var Db *gorm.DB
 
-func GetMateriaById(id int) model.Materia {
+func GetMateriaById(id int) (model.Materia, error) {
 	var materia model.Materia
+	result := Db.Where("id = ?", id).First(&materia)
+	if result.Error != nil {
+		// Loguear el error para debugging
+		log.Error("Failed to find materia with ID:", id, "Error:", result.Error)
+		return model.Materia{}, result.Error
+	}
 
-	Db.Where("id = ?", id).First(&materia)
 	log.Debug("Materia: ", materia)
 
-	return materia
+	return materia, nil
 }
 
 func SearchMateria(keyword string) model.Materias {

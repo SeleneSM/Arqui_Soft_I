@@ -5,6 +5,7 @@ import (
 	"Arqui_Soft_I/backend/dto"
 	"Arqui_Soft_I/backend/model"
 	e "Arqui_Soft_I/backend/utils"
+	"log"
 )
 
 type materiaService struct{}
@@ -41,8 +42,12 @@ func (s *materiaService) SearchMateria(palabras_clave string) (dto.Materias, e.A
 
 func (s *materiaService) GetMateriaById(id int) (dto.MateriaDto, e.ApiError) {
 
-	var materia model.Materia = materiaClient.GetMateriaById(id)
+	materia, err := materiaClient.GetMateriaById(id)
 	var materiaDto dto.MateriaDto
+	if err != nil {
+		log.Println("Error getting materia:", err)
+		return materiaDto, e.NewBadRequestApiError("materia no encontrada")
+	}
 
 	if materia.ID == 0 {
 		return materiaDto, e.NewBadRequestApiError("materia not found")
