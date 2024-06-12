@@ -15,13 +15,13 @@ function App(){
   const [userId, setUserId] = useState(null);
   const [mostrarInscripciones, setMostrarInscripciones] = useState(false);
   const [inscripciones, setInscripciones] = useState([]);
-  const [nuevoCurso, setNuevoCurso] = useState({
+  /*const [nuevoCurso, setNuevoCurso] = useState({
     materia: '',
     fechaInicio: '',
     fechaFin: ''
-    });
+    });*/
   const [inscripcionesTotales, setInscripcionesTotales] = useState([]);
-
+/*
   const handleNuevoCursoChange = (event) => {
     const {materia, fechaInicio, fechaFin} = event.target;
     setNuevoCurso((prevNuevoCurso) => ({
@@ -61,7 +61,7 @@ function App(){
       })
       .catch((error) => console.error(error));
   };
-
+*/
   const handleLogin = (rol, userId) => {
     setIsLoggedIn(true);
     setIsAdmin(rol === 1);
@@ -116,7 +116,8 @@ function App(){
         .then((data) => setInscripciones(data))
         .catch((error) => console.error(error));
     }
-
+  });
+/*
     if (isAdmin) {
       fetch('http://localhost:8090/inscripciones', {
         method: 'GET',
@@ -129,7 +130,7 @@ function App(){
         .catch((error) => console.error(error));
     }
   }, [isLoggedIn, userId, isAdmin]);
-
+*/
   return (
     <div className="App">
       <div>
@@ -143,7 +144,13 @@ function App(){
             )}
           </div>
         )}
-        {isAdmin && (
+      </div>
+    </div>
+  );
+}
+  export default App;
+
+  /*{isAdmin && (
           <div>
             <h2>Agregar nuevo curso</h2>
             <input
@@ -197,11 +204,4 @@ function App(){
               cursoId={curso.id}
               userId={userId}
             />
-          ))}
-      </div>
-    </div>
-  );
-}
-
-  
-  export default App;
+          ))}*/ 

@@ -166,7 +166,7 @@ func insertInitialData() {
 func init() {
 	DBName := "cursify"
 	DBUser := "root"
-	DBPass := "root"
+	DBPass := "Luchiucc2024."
 	DBHost := "127.0.0.1"
 
 	db, err = gorm.Open("mysql", DBUser+":"+DBPass+"@tcp("+DBHost+":3306)/"+DBName+"?charset=utf8&parseTime=True")

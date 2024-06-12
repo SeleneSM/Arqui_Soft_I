@@ -4,11 +4,11 @@ import '../Stylesheet/Login.css';
 function FormularioLogin({handleLogin}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const [token, setToken] = useState('');
+  /*const [token, setToken] = useState('');
   const [error, setError] = useState('');
   const [isAdmin, setIsAdmin] = useState(false);
   const [loggedIn, setLoggedIn] = useState(false);
-  //const navigate = useNavigate();
+  //const navigate = useNavigate();*/
 
 
   const handleSubmit = async (event) => {
@@ -24,16 +24,17 @@ function FormularioLogin({handleLogin}) {
       };
   
       try {
-        const authResponse = await fetch('http://localhost:8090/users/auth', {
-          method: 'GET',
+        const response = await fetch('http://localhost:8090/users/auth', {
+          method: 'POST',
           headers: {
             'Content-Type': 'application/json',
           },
           body: JSON.stringify(userData),
-        })
-        .then((response) => response.json())
-        .then((data) => {
-          if (data.autenticacion==="true") {
+        });
+
+        const data = await response.json();
+
+        if (data.auth) {
             const tipoUsuario = data.rol;
             const userId = data.user_id;
 
@@ -42,9 +43,7 @@ function FormularioLogin({handleLogin}) {
           }else{
             alert('La autenticación fue incorrecta. Ingrese sus datos nuevamente');
           }
-        })
-        
-    }catch(error) {
+        }catch(error) {
           console.error('Error:', error);
           alert('Ocurrió un error durante la autenticación. Por favor, inténtelo de nuevo más tarde.');
         }
