@@ -72,6 +72,7 @@ function App() {
     <div className="App">
       <div>
         <h1>CURSIFY - Encontra el mejor curso para vos</h1>
+        {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1>}
         {!isLoggedIn && <BotonLogin handleLogin={handleLogin} />}
         {isLoggedIn && (
           <div>
@@ -98,16 +99,3 @@ function App() {
 }
 export default App;
 
-  /*
-        {!isAdmin &&
-          cursos.map((curso) => (
-            <Cursos
-              key={curso.id}
-              nombreMateria={curso.materia}
-              fechaInicio={curso.fechaInicio}
-              fechaFin={curso.fechaFin}
-              isLoggedIn={isLoggedIn}
-              cursoId={curso.id}
-              userId={userId}
-            />
-          ))}*/

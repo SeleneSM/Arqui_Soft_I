@@ -6,6 +6,8 @@ import BuscadorMaterias from '../Componentes/BuscadorMaterias';
 
 function Inscripcion() {
     const [cursosDisponibles, setCursosDisponibles] = useState([]);
+    const [cursos, setCursos] = useState([]);
+    const [usuarios, setUsuarios] = useState([]);
     const [inscripciones, setInscripciones] = useState([]);
     const [contadorInscripcion, setContadorInscripcion] = useState(1);
     const [materias, setMaterias] = useState([]);
@@ -59,18 +61,69 @@ function Inscripcion() {
                 "Authorization": `${token}`,
             },
         })
-        .then((response) => response.json())
-        .then((data) => {
-            if (data && data.length > 0) {
-                setInscripciones(data);
-            } else {
-                setInscripciones([]);
-            }
-            console.log('niidea:', data);
+        .then((response) => {
+            console.log('User ID:', userId);
 
-        })
+            console.log('Response status:', response.status);
+            return response.json();
+          })
+        .then((data) => {
+            console.log('Data recibida:', data);
+
+            if (data && data.length > 0) {
+              console.log('Data de inscripciones:', data);
+              obtenerDetalles(data);
+            } else {
+              console.log('No hay inscripciones para el usuario');
+              setInscripciones([]);
+            }})
         .catch((error) => console.error(error));
     };
+    
+
+    const obtenerDetalles = (inscripcionesData) => {
+        Promise.all([
+          fetch("http://localhost:8090/cursos").then((response) => response.json()),
+          fetch("http://localhost:8090/users").then((response) => response.json()),
+        ])
+          .then(([cursosData, usersData]) => {
+            setCursos(cursosData);
+            setUsuarios(usersData);
+    
+            console.log('infocursos:', cursosData);
+            console.log('infouser:', usersData);
+
+            const cursosMap = {};
+            cursosData.forEach((curso) => {
+              cursosMap[curso.id] = curso.materia.nombre;
+              console.log('cursooo:', cursosMap[curso.id]);
+            });
+      
+            const usuariosMap = {};
+            usersData.forEach((user) => {
+              usuariosMap[user.id] = user.username;
+              console.log('useeers:', usuariosMap[user.id]);
+            });
+    
+            const inscripcionesActualizadas = inscripcionesData.map((inscripcion) => {
+                const cursoNombre = cursosMap[inscripcion.id_curso] || "";
+                const usuarioNombre = usuariosMap[inscripcion.userId] || "";
+        
+                console.log(`Inscripción ID: ${inscripcion.id}`);
+                console.log(`Curso Nombre: ${cursoNombre}`);
+                console.log(`Usuario Nombre: ${usuarioNombre}`);
+        
+                return {
+                  ...inscripcion,
+                  curso_nombre: cursoNombre,
+                  usuario_nombre: usuarioNombre,
+                };
+              });
+    
+            setInscripciones(inscripcionesActualizadas); // Actualiza el estado con las inscripciones detalladas
+          })
+          .catch((error) => console.error(error));
+      };
 
 
     useEffect(() => {
@@ -87,7 +140,7 @@ function Inscripcion() {
                         <div key={inscripcion.id} className="inscripcion-item">
                             <p className="subtitulo-inscripcion">Datos de la inscripción {contadorInscripcion + index}:</p>
                             <div className="detalle-inscripcion">
-                                <p>Curso: {inscripcion.nombre}</p>
+                                <p>Curso: {inscripcion.curso_nombre}</p>
                                 <p>Fecha inicio: {inscripcion.fechaInicio}</p>
                                 <p>Fecha fin: {inscripcion.fechaFin}</p>
                             </div>

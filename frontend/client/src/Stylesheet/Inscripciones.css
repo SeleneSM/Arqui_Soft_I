@@ -11,7 +11,7 @@
 
 /* Título de inscripciones */
 .titulo-inscripciones {
-    font-size: 1.8em;
+    font-size: 2em;
     color: #322f3d; /* Color azul-violeta */
     margin-bottom: 20px;
 }
@@ -34,17 +34,22 @@
 }
 
 .subtitulo-inscripcion {
-    font-size: 1.2em;
+    font-size: 1.5em;
     color: #434258; /* Color azul-violeta oscuro */
+    margin-bottom: 10px;
 }
 
 .detalle-inscripcion {
     padding: 10px 0;
+    background-color: #fafafa;
+    border-radius: 5px;
+    padding: 10px;
 }
 
 .detalle-inscripcion p {
     margin: 5px 0;
     color: #555555; /* Color gris oscuro */
+    line-height: 1.5;
 }
 
 /* Título de cursos disponibles */
@@ -52,6 +57,7 @@
     font-size: 2em;
     color: #322f3d; /* Color azul-violeta */
     margin-bottom: 20px;
+    text-align: center;
 }
 
 /* Contenedor de cursos disponibles */
@@ -74,18 +80,20 @@
 .curso-item p {
     margin: 5px 0;
     color: #555555; /* Color gris oscuro */
+    line-height: 1.5;
 }
 
 .curso-item h3 {
-    font-size: 1.4em;
+    font-size: 1.6em;
     color: #434258; /* Color azul-violeta oscuro */
+    margin-bottom: 10px;
 }
 
 /* Estilos del buscador de materias */
 .buscador-materias {
     width: 100%;
     max-width: 800px;
-    background: #ffffff; /* Fondo blanco */
+    background: #ff00ff; 
     padding: 20px;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -98,6 +106,8 @@
     margin-bottom: 20px;
     border: 1px solid #dddddd;
     border-radius: 5px;
+    font-size: 1em;
+    color: #555555;
 }
 
 .buscador-materias button {
@@ -108,11 +118,40 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    transition: background-color 0.2s ease-in;
+    font-size: 1.1em;
+    transition: background-color 0.3s ease-in-out;
 }
 
 .buscador-materias button:hover {
     background-color: #5b5875; 
+}
+
+/* Contenedor de materias */
+.contenedor-materias {
+    width: 100%;
+    max-width: 800px;
+    background: #ffffff; /* Fondo blanco */
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin-bottom: 40px;
+}
+
+.materia-item {
+    border-bottom: 1px solid #dddddd;
+    padding: 10px 0;
+}
+
+.materia-item h3 {
+    font-size: 1.6em;
+    color: #434258; /* Color azul-violeta oscuro */
+    margin-bottom: 10px;
+}
+
+.materia-item p {
+    margin: 5px 0;
+    color: #555555; /* Color gris oscuro */
+    line-height: 1.5;
 }
 
 /* Responsividad */
@@ -123,15 +162,29 @@
 
     .contenedor-inscripciones-usuario, 
     .contenedor-cursos, 
-    .buscador-materias {
+    .buscador-materias,
+    .contenedor-materias {
         padding: 15px;
     }
 
     .titulo-inscripciones {
-        font-size: 1.5em;
+        font-size: 1.8em;
     }
 
     .contenedor-cursos h2 {
-        font-size: 1.5em;
+        font-size: 1.8em;
+    }
+
+    .subtitulo-inscripcion {
+        font-size: 1.4em;
+    }
+
+    .materia-item h3,
+    .curso-item h3 {
+        font-size: 1.4em;
+    }
+
+    .buscador-materias button {
+        font-size: 1em;
     }
 }

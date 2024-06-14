@@ -4,11 +4,7 @@ import '../Stylesheet/Login.css';
 function FormularioLogin({handleLogin}) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  /*const [token, setToken] = useState('');
-  const [error, setError] = useState('');
-  const [isAdmin, setIsAdmin] = useState(false);
-  const [loggedIn, setLoggedIn] = useState(false);
-  //const navigate = useNavigate();*/
+
 
 
   const handleSubmit = async (event) => {
