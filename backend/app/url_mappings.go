@@ -15,6 +15,7 @@ func mapUrls() {
 	router.GET("/inscripciones_por_usuario/:id_usuario", inscripcionController.GetInscripcionesByUser)
 	router.GET("/cursos", cursoController.GetCursos)
 	router.GET("/materia/:id", materiaController.GetMateriaById)
+	router.GET("/users", userController.GetUsers)
 
 	//Post
 	router.POST("/inscribir", inscripcionController.InscribirUsuario)

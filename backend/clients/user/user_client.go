@@ -16,3 +16,10 @@ func GetUserByUsername(Username string) model.User {
 
 	return user
 }
+
+func GetUsers() model.Users {
+	var users model.Users
+	Db.Find(&users)
+	log.Debug("User: ", users)
+	return users
+}
