@@ -20,6 +20,7 @@ func InscribirUsuario(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
 		return
 	}
+	log.Debug("user_id", inscripcion.ID_usuario)
 
 	inscripcion, er := service.InscripcionService.InscribirUsuario(inscripcion)
 

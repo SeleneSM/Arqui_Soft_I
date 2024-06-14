@@ -5,6 +5,8 @@ import (
 	"Arqui_Soft_I/backend/dto"
 	"Arqui_Soft_I/backend/model"
 	e "Arqui_Soft_I/backend/utils"
+
+	log "github.com/sirupsen/logrus"
 )
 
 type inscripcionService struct{}
@@ -29,6 +31,7 @@ func (s *inscripcionService) InscribirUsuario(inscrip dto.InscripcionDto) (dto.I
 	inscripcion_DAO.ID_usuario = inscrip.ID_usuario
 	inscripcion_DAO.Fecha_Inscripcion = inscrip.Fecha_Inscripcion
 	//Llamo a cliente para realizar la inscripcion
+	log.Debug("user_id", inscripcion_DAO.ID_usuario)
 	inscripcion_DAO = inscripcionClient.InscribirUsuario(inscripcion_DAO)
 
 	inscrip.ID = inscripcion_DAO.ID

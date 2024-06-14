@@ -114,21 +114,21 @@ func insertInitialData() {
 		{
 			Fecha_Inicio: time.Date(2024, time.May, 1, 0, 0, 0, 0, time.UTC),
 			Fecha_Fin:    time.Date(2024, time.June, 30, 0, 0, 0, 0, time.UTC),
-			Materia_id:   2,
+			Materia_id:   4,
 			Requisitos:   "Disponibilidad de una computadora con conexion a internet 3 horas a la semana",
 			Instructor:   "Matias Tossetti",
 		},
 		{
 			Fecha_Inicio: time.Date(2024, time.August, 1, 0, 0, 0, 0, time.UTC),
 			Fecha_Fin:    time.Date(2024, time.October, 31, 0, 0, 0, 0, time.UTC),
-			Materia_id:   1,
+			Materia_id:   5,
 			Requisitos:   "Disponibilidad de una computadora con conexion a internet 5 horas a la semana",
 			Instructor:   "Julio Gutierrez",
 		},
 		{
 			Fecha_Inicio: time.Date(2024, time.August, 1, 0, 0, 0, 0, time.UTC),
 			Fecha_Fin:    time.Date(2024, time.September, 31, 0, 0, 0, 0, time.UTC),
-			Materia_id:   2,
+			Materia_id:   4,
 			Requisitos:   "Disponibilidad de una computadora con conexion a internet 3 horas a la semana",
 			Instructor:   "Julio Gutierrez",
 		},
@@ -148,7 +148,7 @@ func insertInitialData() {
 		}
 	}
 
-	inscripcion := model.Inscripcion{
+	/*inscripcion := model.Inscripcion{
 
 		ID_curso:          1,
 		ID_usuario:        2,
@@ -157,7 +157,7 @@ func insertInitialData() {
 
 	if err := db.Create(&inscripcion).Error; err != nil {
 		log.Error("Failed to insert curso:", err.Error())
-	}
+	}*/
 
 	log.Info("Initial values inserted")
 

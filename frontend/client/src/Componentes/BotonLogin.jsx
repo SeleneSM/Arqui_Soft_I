@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import FormularioLogin from './FormularioLogin';
+import '../Stylesheet/BotonLogin.css';
 
 function BotonLogin({ handleLogin }) {
   const [isOpen, setIsOpen] = useState(false);
@@ -14,8 +15,9 @@ function BotonLogin({ handleLogin }) {
 
   return (
     <>
+    <div className="iniciarsesion">
       <button onClick={openPopup}>Iniciar sesión</button>
-
+      </div>
       {isOpen && (
         <div className="popup">
           <FormularioLogin handleLogin={handleLogin}/>

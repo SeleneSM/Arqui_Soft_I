@@ -35,8 +35,10 @@ function FormularioLogin({handleLogin}) {
         const data = await response.json();
 
         if (data.auth) {
-            const tipoUsuario = data.rol;
-            const userId = data.user_id;
+          const tipoUsuario = data.rol;
+          const userId = data.user_id;
+          console.log('Rol:', data.rol);
+          console.log('id usuario:', data.user_id);
 
             handleLogin(tipoUsuario, userId)
             alert('Autenticacion exitosa');
@@ -52,15 +54,29 @@ function FormularioLogin({handleLogin}) {
 
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h3>Iniciar sesión</h3>
-      <p>Email:</p>
-      <input type="username" className='campoUsername' value={username} onChange={(e) => setUsername(e.target.value)} />
-      <p>Contraseña:</p>
-      <input type="password" className='campoPassword' value={password}  onChange={(e) => setPassword(e.target.value)} />
-      <button type="submit">Iniciar sesión</button>
-    </form>
+    <div className="container-principal">
+      <div className="main">
+        <form onSubmit={handleSubmit} className="login">
+          <h3>Iniciar sesión</h3>
+          <p>Username:</p>
+          <input 
+            type="text" 
+            value={username} 
+            onChange={(e) => setUsername(e.target.value)} 
+          />
+          <p>Contraseña:</p>
+          <input 
+            type="password" 
+            value={password}  
+            onChange={(e) => setPassword(e.target.value)} 
+          />
+          <button type="submit" className="log">Iniciar sesión</button>
+        </form>
+        
+      </div>
+    </div>
   );
+
 
 
 }
