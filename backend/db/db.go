@@ -148,17 +148,6 @@ func insertInitialData() {
 		}
 	}
 
-	/*inscripcion := model.Inscripcion{
-
-		ID_curso:          1,
-		ID_usuario:        2,
-		Fecha_Inscripcion: time.Date(2024, time.September, 23, 0, 0, 0, 0, time.UTC),
-	}
-
-	if err := db.Create(&inscripcion).Error; err != nil {
-		log.Error("Failed to insert curso:", err.Error())
-	}*/
-
 	log.Info("Initial values inserted")
 
 }

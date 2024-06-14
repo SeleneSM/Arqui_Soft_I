@@ -35,11 +35,6 @@ func (s *userService) UserAuth(userDto dto.UserDto) (bool, string, int) {
 	user := userClient.GetUserByUsername(userDto.Username) //Accede a la bd
 	//busca en la bd al usuario por su nombre de usuario(Username)
 
-	/*if user.Password == userDto.Password {
-		return true, user.Rol, user.ID
-	}
-
-	return false, "", -1 */
 	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userDto.Password))
 	if err != nil {
 		return false, "", -1

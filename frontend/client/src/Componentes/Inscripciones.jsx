@@ -11,6 +11,7 @@ function Inscripcion() {
     const [inscripciones, setInscripciones] = useState([]);
     const [contadorInscripcion, setContadorInscripcion] = useState(1);
     const [materias, setMaterias] = useState([]);
+    //NO TOMA EL USERID
     const { token, userId } = useParams();
 
     const buscarCursosDisponibles = () => {
@@ -62,6 +63,7 @@ function Inscripcion() {
             },
         })
         .then((response) => {
+          //ESTE ES EL QUE NO TOMA BIEN EL userId
             console.log('User ID:', userId);
 
             console.log('Response status:', response.status);

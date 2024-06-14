@@ -35,17 +35,7 @@ function App() {
           setInscripcionesTotales(data); // Asignar los datos a la variable de estado
         })
         .catch((error) => console.error(error));
-    } /*else {
-      fetch(`http://localhost:8090/inscripciones/inscripcionuser/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => setInscripciones(data))
-        .catch((error) => console.error(error));
-    }*/
+    }
     setMostrarInscripciones(!mostrarInscripciones);
   };
 
