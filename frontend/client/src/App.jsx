@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Routes, Route } from 
+'react-router-dom'
 import BotonLogin from './Componentes/BotonLogin';
+import BotonRegister from './Componentes/BotonRegister';
 import Cursos from './Componentes/Cursos.jsx';
 import Inscripciones from './Componentes/Inscripciones.jsx';
 
@@ -64,6 +66,7 @@ function App() {
         <h1>CURSIFY - Encontra el mejor curso para vos</h1>
         {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1>}
         {!isLoggedIn && <BotonLogin handleLogin={handleLogin} />}
+        {!isLoggedIn && <BotonRegister />}
         {isLoggedIn && (
           <div>
             <div className="boton-insc">
@@ -74,6 +77,9 @@ function App() {
             )}
           </div>
         )}
+        
+
+        
         {!isAdmin &&
           cursos.map((curso) => (
             <Cursos
