@@ -12,6 +12,7 @@ type materiaService struct{}
 type materiaServiceInterface interface {
 	SearchMateria(palabras_clave string) (dto.Materias, e.ApiError)
 	GetMateriaById(id int) (dto.MateriaDto, e.ApiError)
+	InsertMateria(materiaDto dto.MateriaDto) (dto.MateriaDto, e.ApiError)
 }
 
 var (
@@ -57,6 +58,19 @@ func (s *materiaService) GetMateriaById(id int) (dto.MateriaDto, e.ApiError) {
 	materiaDto.Nombre = materia.Nombre
 	materiaDto.Duracion = materia.Duracion
 	materiaDto.Descripcion = materia.Descripcion
+	materiaDto.Palabras_clave = materia.Palabras_clave
+
+	return materiaDto, nil
+}
+
+func (s *materiaService) InsertMateria(materiaDto dto.MateriaDto) (dto.MateriaDto, e.ApiError) {
+
+	var materia model.Materia
+
+	materiaDto.Descripcion = materia.Descripcion
+	materiaDto.Duracion = materia.Duracion
+	materiaDto.ID = materia.ID
+	materiaDto.Nombre = materia.Nombre
 	materiaDto.Palabras_clave = materia.Palabras_clave
 
 	return materiaDto, nil

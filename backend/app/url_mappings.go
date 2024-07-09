@@ -20,5 +20,8 @@ func mapUrls() {
 	//Post
 	router.POST("/inscribir", inscripcionController.InscribirUsuario)
 	router.POST("/users/auth", userController.UserAuth)
+	router.POST("/registrar_usuario", userController.UserRegister)
+	router.POST("/crear_materia", materiaController.MateriaInsert)
+	router.POST("/crear_curso", cursoController.CursoInsert)
 	//router.POST("cursos", cursoController.)
 }

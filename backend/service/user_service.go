@@ -17,6 +17,8 @@ type userService struct{}
 type userServiceInterface interface {
 	UserAuth(userDto dto.UserDto) (bool, string, int)
 	GetUsers() (dto.Users, e.ApiError)
+	RegisterUser(userDto dto.UserDto) (dto.UserDto, e.ApiError)
+	GetUserById(id int) (dto.UserDto, e.ApiError)
 }
 
 var (
@@ -43,6 +45,7 @@ func (s *userService) UserAuth(userDto dto.UserDto) (bool, string, int) {
 	return true, user.Rol, user.ID
 
 }
+
 func (s *userService) GetUsers() (dto.Users, e.ApiError) {
 
 	var users model.Users = userClient.GetUsers()
@@ -60,4 +63,44 @@ func (s *userService) GetUsers() (dto.Users, e.ApiError) {
 	}
 
 	return usersDto, nil
+}
+
+func (s *userService) RegisterUser(userDto dto.UserDto) (dto.UserDto, e.ApiError) {
+
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userDto.Password), bcrypt.DefaultCost)
+
+	if err != nil {
+		// Handle error
+	}
+	var user model.User
+
+	user.Nombre = userDto.Nombre
+	user.Apellido = userDto.Apellido
+	user.Password = string(hashedPassword)
+	user.Username = userDto.Username
+	user.Rol = userDto.Rol
+
+	user = userClient.RegisterUser(user)
+
+	userDto.ID = user.ID
+
+	return userDto, nil
+}
+
+func (s *userService) GetUserById(id int) (dto.UserDto, e.ApiError) {
+
+	var user model.User = userClient.GetUserById(id)
+	var userDto dto.UserDto
+
+	if user.ID == 0 {
+		return userDto, e.NewBadRequestApiError("user not found")
+	}
+
+	userDto.Nombre = user.Nombre
+	userDto.Apellido = user.Apellido
+	userDto.Username = user.Username
+	userDto.Rol = user.Rol
+	userDto.ID = user.ID
+
+	return userDto, nil
 }

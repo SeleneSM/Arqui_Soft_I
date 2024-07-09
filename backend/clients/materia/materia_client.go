@@ -32,3 +32,16 @@ func SearchMateria(keyword string) model.Materias {
 
 	return materias
 }
+
+func InsertMateria(materia model.Materia) model.Materia {
+	result := Db.Create(&materia)
+
+	if result.Error != nil {
+
+		//TODO Manage Errors
+
+		log.Error("")
+	}
+	log.Debug("Materia creada: ", materia.ID)
+	return materia
+}

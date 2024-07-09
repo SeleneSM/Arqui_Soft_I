@@ -41,3 +41,22 @@ func SearchMateria(c *gin.Context) {
 	c.JSON(http.StatusOK, materiasDto)
 
 }
+
+func MateriaInsert(c *gin.Context) {
+	var materiaDto dto.MateriaDto
+
+	err := c.BindJSON(&materiaDto)
+	if err != nil {
+		log.Error(err.Error())
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	materiaDto, er := service.MateriaService.InsertMateria(materiaDto)
+	// Error del Insert
+	if er != nil {
+		c.JSON(er.Status(), er)
+		return
+	}
+	c.JSON(http.StatusCreated, materiaDto)
+}

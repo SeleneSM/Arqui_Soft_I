@@ -24,3 +24,16 @@ func GetCursos() model.Cursos {
 	log.Debug("Cursos: ", cursos)
 	return cursos
 }
+
+func InsertCurso(curso model.Curso) model.Curso {
+	result := Db.Create(&curso)
+
+	if result.Error != nil {
+
+		//TODO Manage Errors
+
+		log.Error("")
+	}
+	log.Debug("Curso creado: ", curso.ID)
+	return curso
+}
