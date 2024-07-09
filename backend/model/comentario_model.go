@@ -10,6 +10,7 @@ type Comentario struct {
 	ID_curso         int       `gorm:"not null"`
 	Usuario          User      `gorm:"foreignKey:UsuarioID;references:ID"`
 	Fecha_comentario time.Time `gorm:"type:date"`
+	Texto            string    `gorm:"type:text;not null"`
 }
 
 type Comentarios []Inscripcion
