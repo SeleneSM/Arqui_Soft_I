@@ -83,55 +83,52 @@ function Inscripcion() {
     };
     
 
-    const obtenerDetalles = (inscripcionesData) => {
-        Promise.all([
-          fetch("http://localhost:8090/cursos").then((response) => response.json()),
-          fetch("http://localhost:8090/users").then((response) => response.json()),
-        ])
-          .then(([cursosData, usersData]) => {
-            setCursos(cursosData);
-            setUsuarios(usersData);
-    
-            console.log('infocursos:', cursosData);
-            console.log('infouser:', usersData);
-
-            const cursosMap = {};
-            cursosData.forEach((curso) => {
-              cursosMap[curso.id] = curso.materia.nombre;
-              console.log('cursooo:', cursosMap[curso.id]);
-            });
-      
-            const usuariosMap = {};
-            usersData.forEach((user) => {
-              usuariosMap[user.id] = user.username;
-              console.log('useeers:', usuariosMap[user.id]);
-            });
-    
-            const inscripcionesActualizadas = inscripcionesData.map((inscripcion) => {
-                const cursoNombre = cursosMap[inscripcion.id_curso] || "";
-                const usuarioNombre = usuariosMap[inscripcion.userId] || "";
-        
-                console.log(`Inscripción ID: ${inscripcion.id}`);
-                console.log(`Curso Nombre: ${cursoNombre}`);
-                console.log(`Usuario Nombre: ${usuarioNombre}`);
-        
-                return {
-                  ...inscripcion,
-                  curso_nombre: cursoNombre,
-                  usuario_nombre: usuarioNombre,
-                };
+    const obtenerDetalles = (cursosData, setCursos) => {
+      const cursoIds = [...new Set(cursosData.map((curso) => curso.curso_id))];
+      const materiaIds = [...new Set(cursosData.map((curso) => curso.materia_id))];
+  
+      const fetchCursoPromises = cursoIds.map((cursoId) =>
+          fetch(`http://localhost:8090/cursos/${cursoId}`, {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+          }).then((response) => response.json())
+      );
+  
+      const fetchMateriaPromises = materiaIds.map((materiaId) =>
+          fetch(`http://localhost:8090/materias/${materiaId}`, {
+              method: "GET",
+              headers: {
+                  "Content-Type": "application/json",
+              },
+          }).then((response) => response.json())
+      );
+  
+      Promise.all([...fetchCursoPromises, ...fetchMateriaPromises])
+          .then((results) => {
+              const cursos = {};
+              const materias = {};
+  
+              results.forEach((result) => {
+                  if (result.type === "curso") {
+                      cursos[result.id] = result.nombre_curso;
+                  } else if (result.type === "materia") {
+                      materias[result.id] = result.nombre_materia;
+                  }
               });
-    
-            setInscripciones(inscripcionesActualizadas); // Actualiza el estado con las inscripciones detalladas
+  
+              const cursosActualizados = cursosData.map((curso) => ({
+                  ...curso,
+                  nombre_curso: cursos[curso.curso_id] || "",
+                  nombre_materia: materias[curso.materia_id] || "",
+              }));
+  
+              setCursos(cursosActualizados);
           })
           .catch((error) => console.error(error));
-      };
-
-
-    useEffect(() => {
-        fetchTodasLasInscripciones();
-        buscarCursosDisponibles();
-    }, [userId]);
+  };
+  
 
    return (
         <div className="contenedor-principal">

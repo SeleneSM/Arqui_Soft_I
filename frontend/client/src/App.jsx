@@ -19,24 +19,14 @@ function App() {
 
   const handleLogin = (rol, userId) => {
     setIsLoggedIn(true);
-    setIsAdmin(rol === 1);
+    setIsAdmin(rol === "Administrador");
     setUserId(userId);
   };
 
   const toggleInscripciones = () => {
-    if (isAdmin) {
-      fetch('http://localhost:8090/inscripciones', {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => {
-          console.log(data); // Verificar los datos recibidos
-          setInscripcionesTotales(data); // Asignar los datos a la variable de estado
-        })
-        .catch((error) => console.error(error));
+    if (isAdmin) {/*
+      
+      */
     }
     setMostrarInscripciones(!mostrarInscripciones);
   };
@@ -64,10 +54,14 @@ function App() {
     <div className="App">
       <div>
         <h1>CURSIFY - Encontra el mejor curso para vos</h1>
-        {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1>}
+        {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1>
+
+          
+        
+        }
         {!isLoggedIn && <BotonLogin handleLogin={handleLogin} />}
         {!isLoggedIn && <BotonRegister />}
-        {isLoggedIn && (
+        {!isAdmin && isLoggedIn && (
           <div>
             <div className="boton-insc">
             <button onClick={toggleInscripciones}>Mis Inscripciones</button>
@@ -77,8 +71,6 @@ function App() {
             )}
           </div>
         )}
-        
-
         
         {!isAdmin &&
           cursos.map((curso) => (

@@ -1,0 +1,121 @@
+/* Admin.css */
+
+/* Estilos generales */
+.contenedor-crear-curso {
+    margin-bottom: 20px;
+  }
+  
+  .contenedor-cursos {
+    margin-top: 20px;
+  }
+  
+  .contenedor-crear-curso form {
+    display: flex;
+    flex-direction: column;
+    width: 50%;
+    margin: 0 auto;
+  }
+  
+  .contenedor-crear-curso form input,
+  .contenedor-crear-curso form select,
+  .contenedor-crear-curso form textarea {
+    margin-bottom: 10px;
+    padding: 8px;
+    font-size: 16px;
+  }
+  
+  .contenedor-crear-curso form button {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-size: 18px;
+    margin-top: 10px;
+  }
+  
+  .contenedor-crear-curso form button:hover {
+    background-color: #0056b3;
+  }
+  
+  .contenedor-cursos ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .contenedor-cursos li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  .contenedor-cursos li h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  .contenedor-cursos li p {
+    margin: 5px 0;
+  }
+  
+  /* Estilos específicos para Header */
+  header {
+    background-color: #343a40;
+    color: white;
+    padding: 10px 0;
+    text-align: center;
+  }
+  
+  header h1 {
+    font-size: 24px;
+  }
+  
+  /* Estilos específicos para formularios */
+  input[type="text"],
+  textarea,
+  select {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    font-size: 16px;
+  }
+  
+  textarea {
+    resize: vertical;
+  }
+  
+  /* Estilos específicos para botones */
+  button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    cursor: pointer;
+    font-size: 16px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  /* Estilos específicos para listas */
+  ul {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  li {
+    margin-bottom: 20px;
+    padding: 10px;
+    border: 1px solid #ccc;
+  }
+  
+  li h2 {
+    font-size: 18px;
+    margin-bottom: 10px;
+  }
+  
+  li p {
+    margin: 5px 0;
+  }
+  
