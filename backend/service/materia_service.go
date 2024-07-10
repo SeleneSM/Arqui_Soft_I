@@ -67,11 +67,15 @@ func (s *materiaService) InsertMateria(materiaDto dto.MateriaDto) (dto.MateriaDt
 
 	var materia model.Materia
 
-	materiaDto.Descripcion = materia.Descripcion
-	materiaDto.Duracion = materia.Duracion
+	materia.Descripcion = materiaDto.Descripcion
+	materia.Duracion = materiaDto.Duracion
+	materia.ID = materiaDto.ID
+	materia.Nombre = materiaDto.Nombre
+	materia.Palabras_clave = materiaDto.Palabras_clave
+
+	materia = materiaClient.InsertMateria(materia)
+
 	materiaDto.ID = materia.ID
-	materiaDto.Nombre = materia.Nombre
-	materiaDto.Palabras_clave = materia.Palabras_clave
 
 	return materiaDto, nil
 }
