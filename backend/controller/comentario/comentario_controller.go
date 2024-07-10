@@ -7,6 +7,8 @@ import (
 
 	log "github.com/sirupsen/logrus"
 
+	"strconv"
+
 	"github.com/gin-gonic/gin"
 )
 
@@ -19,7 +21,7 @@ func InsertComentario(c *gin.Context) {
 	}
 
 	log.Debug("user_id: ", comentario.UsuarioID)
-	comentario, apiErr := service.InsertComentario(comentario)
+	comentario, apiErr := service.ComentarioService.InsertComentario(comentario)
 	if apiErr != nil {
 		c.JSON(apiErr.Status(), apiErr)
 		return
@@ -29,9 +31,13 @@ func InsertComentario(c *gin.Context) {
 }
 
 func GetComentariosPorCursoID(c *gin.Context) {
-	cursoID := c.Param("curso_id")
-
-	comentarios, apiErr := service.GetComentariosPorCursoID(cursoID)
+	cursoIDStr := c.Param("curso_id")
+	cursoID, err := strconv.Atoi(cursoIDStr)
+	if err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid curso_id"})
+		return
+	}
+	comentarios, apiErr := service.ComentarioService.GetComentariosPorCursoID(cursoID)
 	if apiErr != nil {
 		c.JSON(apiErr.Status(), apiErr)
 		return
