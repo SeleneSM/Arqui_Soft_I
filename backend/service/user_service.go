@@ -70,7 +70,7 @@ func (s *userService) RegisterUser(userDto dto.UserDto) (dto.UserDto, e.ApiError
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userDto.Password), bcrypt.DefaultCost)
 
 	if err != nil {
-		// Handle error
+
 	}
 	var user model.User
 

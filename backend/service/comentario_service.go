@@ -6,38 +6,35 @@ import (
 	"Arqui_Soft_I/backend/model"
 	e "Arqui_Soft_I/backend/utils"
 
-	log "github.com/sirupsen/logrus"
 	"time"
 )
+
 type comentarioService struct{}
 
 type comentarioServiceInterface interface {
 	InsertComentario(comentarioDto dto.ComentarioDto) (model.Comentario, e.ApiError)
-	
 }
 
 var (
-	comentarioService comentarioServiceInterface
+	ComentarioService comentarioServiceInterface
 )
 
 func init() {
-	comentarioService = &comentarioService{}
+	ComentarioService = &comentarioService{}
 }
 
+func (s *comentarioService) InsertComentario(comentarioDto dto.ComentarioDto) (model.Comentario, e.ApiError) {
+	var comentario_DAO model.Comentario
+	comentario_DAO.ID_curso = comentarioDto.CursoID
+	comentario_DAO.ID_usuario = comentarioDto.UsuarioID
+	comentario_DAO.Texto = comentarioDto.Texto
+	comentario_DAO.Fecha_comentario = time.Now()
+	comentario_DAO.Usuario.Username = comentarioDto.Usuario.Username
 
-func InsertComentario(comentarioDto dto.ComentarioDto) (model.Comentario, e.ApiError) {
-    var comentario_DAO = model.Comentario
-	comentario_DAO.ID_curso =  comentarioDto.CursoID,
-	comentario_DAO.ID_usuario = comentarioDto.UsuarioID,
-	comentario_DAO.Texto =    comentarioDto.Texto,
-	comentario_DAO.Fecha_comentario =     time.Now(),
-	comentario_DAO.Usuario.Username= comentarioDto.Usuario.Username ,
+	createdComentario, err := comentarioClient.InsertComentario(comentario_DAO)
+	if err != nil {
+		return model.Comentario{}, e.NewInternalServerApiError("Error creando comentario", err)
+	}
 
-
-    createdComentario, err := client.CrearComentario(comentario)
-    if err != nil {
-        return model.Comentario{}, e.NewInternalServerApiError("Error creando comentario", err)
-    }
-
-    return createdComentario, nil
+	return createdComentario, nil
 }

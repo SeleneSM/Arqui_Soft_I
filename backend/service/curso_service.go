@@ -82,17 +82,20 @@ func (s *cursoService) InsertCurso(cursoDto dto.CursoDto) (dto.CursoDto, e.ApiEr
 
 	var curso model.Curso
 
+	curso.Fecha_Inicio = cursoDto.Fecha_Inicio
+	curso.Fecha_Fin = cursoDto.Fecha_Fin
+	curso.Materia_id = cursoDto.Materia_id
+	curso.Materia.Descripcion = cursoDto.Materia.Descripcion
+	curso.Materia.Nombre = cursoDto.Materia.Nombre
+	curso.Materia.Palabras_clave = cursoDto.Materia.Palabras_clave
+	curso.Materia.Duracion = cursoDto.Materia.Duracion
+	curso.Materia.ID = cursoDto.Materia.ID
+	curso.Requisitos = cursoDto.Requisitos
+	curso.Instructor = cursoDto.Instructor
+
+	curso = cursoClient.InsertCurso(curso)
+
 	cursoDto.ID = curso.ID
-	cursoDto.Fecha_Inicio = curso.Fecha_Inicio
-	cursoDto.Fecha_Fin = curso.Fecha_Fin
-	cursoDto.Materia_id = curso.Materia_id
-	cursoDto.Materia.Descripcion = curso.Materia.Descripcion
-	cursoDto.Materia.Nombre = curso.Materia.Nombre
-	cursoDto.Materia.Palabras_clave = curso.Materia.Palabras_clave
-	cursoDto.Materia.Duracion = curso.Materia.Duracion
-	cursoDto.Materia.ID = curso.Materia.ID
-	cursoDto.Requisitos = curso.Requisitos
-	cursoDto.Instructor = curso.Instructor
 
 	return cursoDto, nil
 }
