@@ -2,6 +2,8 @@ package services
 
 import (
 	comentarioClient "Arqui_Soft_I/backend/clients/comentario"
+	userClient "Arqui_Soft_I/backend/clients/user"
+
 	"Arqui_Soft_I/backend/dto"
 	"Arqui_Soft_I/backend/model"
 	e "Arqui_Soft_I/backend/utils"
@@ -26,12 +28,25 @@ func init() {
 
 func (s *comentarioService) InsertComentario(comentarioDto dto.ComentarioDto) (dto.ComentarioDto, e.ApiError) {
 	var comentario_DAO model.Comentario
+	usuar := userClient.GetUserById(comentarioDto.UsuarioID)
+	//DAO que se carga en la base de datos
 	comentario_DAO.ID_curso = comentarioDto.CursoID
 	comentario_DAO.ID_usuario = comentarioDto.UsuarioID
 	comentario_DAO.Texto = comentarioDto.Texto
 	comentario_DAO.Fecha_comentario = time.Now()
+	comentario_DAO.Usuario.Username = usuar.Username
+	comentario_DAO.Usuario.Apellido = usuar.Apellido
+	comentario_DAO.Usuario.Rol = usuar.Rol
+	comentario_DAO.Usuario.Nombre = usuar.Nombre
+
+	//dto que devuelve la funcion
 	comentarioDto.Fecha_comentario = time.Now()
-	comentario_DAO.Usuario.Username = comentarioDto.Usuario.Username
+	comentarioDto.Usuario.Username = usuar.Username
+	comentarioDto.Usuario.Apellido = usuar.Apellido
+	comentarioDto.Usuario.Password = usuar.Password
+	comentarioDto.Usuario.Rol = usuar.Rol
+	comentarioDto.Usuario.ID = usuar.ID
+	comentarioDto.Usuario.Nombre = usuar.Nombre
 
 	comentario_DAO, err := comentarioClient.InsertComentario(comentario_DAO)
 	if err != nil {
