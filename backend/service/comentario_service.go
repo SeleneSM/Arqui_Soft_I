@@ -30,6 +30,7 @@ func (s *comentarioService) InsertComentario(comentarioDto dto.ComentarioDto) (d
 	comentario_DAO.ID_usuario = comentarioDto.UsuarioID
 	comentario_DAO.Texto = comentarioDto.Texto
 	comentario_DAO.Fecha_comentario = time.Now()
+	comentarioDto.Fecha_comentario = time.Now()
 	comentario_DAO.Usuario.Username = comentarioDto.Usuario.Username
 
 	comentario_DAO, err := comentarioClient.InsertComentario(comentario_DAO)

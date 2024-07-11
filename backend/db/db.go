@@ -1,6 +1,7 @@
 package db
 
 import (
+	comentarioClient "Arqui_Soft_I/backend/clients/comentario"
 	cursoClient "Arqui_Soft_I/backend/clients/curso"
 	incripcionClient "Arqui_Soft_I/backend/clients/inscripcion"
 	materiaClient "Arqui_Soft_I/backend/clients/materia"
@@ -171,6 +172,7 @@ func init() {
 	cursoClient.Db = db
 	materiaClient.Db = db
 	incripcionClient.Db = db
+	comentarioClient.Db = db
 
 }
 
@@ -180,6 +182,7 @@ func StartDbEngine() {
 	db.AutoMigrate(&model.Materia{})
 	db.AutoMigrate(&model.Curso{})
 	db.AutoMigrate(&model.Inscripcion{})
+	db.AutoMigrate(&model.Comentario{})
 
 	insertInitialData()
 

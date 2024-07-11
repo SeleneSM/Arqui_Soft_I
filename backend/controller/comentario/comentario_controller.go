@@ -21,6 +21,7 @@ func InsertComentario(c *gin.Context) {
 	}
 
 	log.Debug("user_id: ", comentario.UsuarioID)
+	log.Debug("curso_id: ", comentario.CursoID)
 	comentario, apiErr := service.ComentarioService.InsertComentario(comentario)
 	if apiErr != nil {
 		c.JSON(apiErr.Status(), apiErr)
