@@ -1,9 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import { createRoot } from 'react-dom/client'
-import { BrowserRouter as Router, Routes, Route } from 
+import { BrowserRouter as Router, Routes, Route, Form } from 
 'react-router-dom'
 import BotonLogin from './Componentes/BotonLogin';
 import BotonRegister from './Componentes/BotonRegister';
+import BotonCrearCurso from './Componentes/BotonCrearCurso';
+import FormularioRegister from './Componentes/FormularioRegister.jsx';
 import Cursos from './Componentes/Cursos.jsx';
 import Inscripciones from './Componentes/Inscripciones.jsx';
 
@@ -16,6 +18,7 @@ function App() {
   const [mostrarInscripciones, setMostrarInscripciones] = useState(false);
   const [inscripciones, setInscripciones] = useState([]);
   const [inscripcionesTotales, setInscripcionesTotales] = useState([]);
+  
 
   const handleLogin = (rol, userId) => {
     setIsLoggedIn(true);
@@ -23,6 +26,8 @@ function App() {
     setUserId(userId);
   };
 
+
+  
   const toggleInscripciones = () => {
     if (isAdmin) {/*
       
@@ -54,11 +59,8 @@ function App() {
     <div className="App">
       <div>
         <h1>CURSIFY - Encontra el mejor curso para vos</h1>
-        {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1>
-
-          
-        
-        }
+        {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1>&&
+         <BotonCrearCurso />}
         {!isLoggedIn && <BotonLogin handleLogin={handleLogin} />}
         {!isLoggedIn && <BotonRegister />}
         {!isAdmin && isLoggedIn && (
@@ -71,7 +73,7 @@ function App() {
             )}
           </div>
         )}
-        
+
         {!isAdmin &&
           cursos.map((curso) => (
             <Cursos

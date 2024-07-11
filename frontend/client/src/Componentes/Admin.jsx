@@ -6,18 +6,18 @@ import { useParams } from 'react-router-dom';
 function Admin() {
   const [cursos, setCursos] = useState([]);
   const [nuevoCurso, setNuevoCurso] = useState({
-    fechaInicio: '',
-    fechaFin: '',
+    fecha_Inicio: '',
+    fecha_Fin: '',
     requisitos: '',
     instructor: '',
-    idMateria: '',
+    materia_id: '',
     
   });
-  const [materias, setMaterias] = useState([]);
+  const [materia, setMaterias] = useState([]);
   const { token } = useParams();
 
   useEffect(() => {
-    fetch('http://localhost:8090/materias')
+    fetch(`http://localhost:8090/materias/${materiaId}`)
       .then((response) => response.json())
       .then((data) => setMaterias(data))
       .catch((error) => console.error(error));
@@ -32,8 +32,8 @@ function Admin() {
     event.preventDefault();
 
     // Validar el formato de las fechas
-    const fechaInicioValida = /^\d{4}-\d{2}-\d{2}$/.test(nuevoCurso.fechaInicio);
-    const fechaFinValida = /^\d{4}-\d{2}-\d{2}$/.test(nuevoCurso.fechaFin);
+    const fechaInicioValida = /^\d{4}-\d{2}-\d{2}$/.test(nuevoCurso.fecha_Inicio);
+    const fechaFinValida = /^\d{4}-\d{2}-\d{2}$/.test(nuevoCurso.fecha_Fin);
 
     if (!fechaInicioValida || !fechaFinValida) {
       alert('Por favor, ingrese las fechas en el formato YYYY-MM-DD.');
@@ -41,11 +41,11 @@ function Admin() {
     }
 
     const cursoData = {
-      fecha_inicio: nuevoCurso.fechaInicio,
-      fecha_fin: nuevoCurso.fechaFin,
+      fecha_inicio: nuevoCurso.fecha_Inicio,
+      fecha_fin: nuevoCurso.fecha_Fin,
       requisitos: nuevoCurso.requisitos,
       instructor: nuevoCurso.instructor,
-      materia_id: nuevoCurso.idMateria,
+      materia_id: nuevoCurso.materia_id,
     };
 
     try {
@@ -64,12 +64,11 @@ function Admin() {
         setCursos((prevCursos) => [...prevCursos, cursoResult]);
         alert("Se ha creado un nuevo curso con éxito");
         setNuevoCurso({
-          fechaInicio: '',
-          fechaFin: '',
+          fecha_Inicio: '',
+          fecha_Fin: '',
+          materia_id: '',
           requisitos: '',
           instructor: '',
-          idMateria: '',
-          
         });
       } else {
         console.error(cursoResult.error);
@@ -104,7 +103,7 @@ function Admin() {
           <input
             type="text"
             name="fechaInicio"
-            value={nuevoCurso.fechaInicio}
+            value={nuevoCurso.fecha_Inicio}
             onChange={handleInputChange}
             placeholder="Fecha de Inicio (YYYY-MM-DD)"
             required
@@ -112,7 +111,7 @@ function Admin() {
           <input
             type="text"
             name="fechaFin"
-            value={nuevoCurso.fechaFin}
+            value={nuevoCurso.fecha_Fin}
             onChange={handleInputChange}
             placeholder="Fecha de Fin (YYYY-MM-DD)"
             required
@@ -134,14 +133,14 @@ function Admin() {
           />
           <select
             name="idMateria"
-            value={nuevoCurso.idMateria}
+            value={nuevoCurso.materia_id}
             onChange={handleInputChange}
             required
           >
             <option value="">Selecciona una materia</option>
-            {materias.map((materia) => (
-              <option key={materia.id} value={materia.id}>
-                {materia.nombre}
+            {materia.map((materia) => (
+              <option key={materia_id} value={materia.id}>
+                {materia.i} 
               </option>
             ))}
           </select>

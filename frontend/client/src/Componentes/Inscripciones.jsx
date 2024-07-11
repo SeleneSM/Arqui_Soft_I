@@ -83,9 +83,10 @@ function Inscripcion() {
     };
     
 
-    const obtenerDetalles = (cursosData, setCursos) => {
-      const cursoIds = [...new Set(cursosData.map((curso) => curso.curso_id))];
-      const materiaIds = [...new Set(cursosData.map((curso) => curso.materia_id))];
+    const obtenerDetalles = (inscripcionesData) => {
+      const cursoIds = [...new Set(inscripcionesData.map((inscripciones) => inscripciones.curso_id))];
+      //const materiaIds = [...new Set(cursosData.map((curso) => curso.materia_id))];
+      const userIds = [...new Set(inscripcionesData.map((inscripciones) => inscripciones.id_usuario))];
   
       const fetchCursoPromises = cursoIds.map((cursoId) =>
           fetch(`http://localhost:8090/cursos/${cursoId}`, {
@@ -104,24 +105,38 @@ function Inscripcion() {
               },
           }).then((response) => response.json())
       );
+
+      const fetchUserPromises = userIds.map((userId) =>
+        fetch(`http://localhost:8090/users/${userId}`, {
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json",
+            },
+        }).then((response) => response.json())
+    );
+
   
-      Promise.all([...fetchCursoPromises, ...fetchMateriaPromises])
+      Promise.all([...fetchCursoPromises, ...fetchMateriaPromises, ...fetchUserPromises])
           .then((results) => {
               const cursos = {};
-              const materias = {};
+              //const materias = {};
+              const users = {};
   
               results.forEach((result) => {
                   if (result.type === "curso") {
                       cursos[result.id] = result.nombre_curso;
-                  } else if (result.type === "materia") {
-                      materias[result.id] = result.nombre_materia;
+                  //} else if (result.type === "materia") {
+                      //materias[result.id] = result.nombre_materia;
+                  } else if (result.type === "users") {
+                    users[result.id] = result.user;
                   }
               });
   
               const cursosActualizados = cursosData.map((curso) => ({
                   ...curso,
                   nombre_curso: cursos[curso.curso_id] || "",
-                  nombre_materia: materias[curso.materia_id] || "",
+                  //nombre_materia: materias[curso.materia_id] || "",
+                  user: users[curso.id_usuario] || "",
               }));
   
               setCursos(cursosActualizados);
