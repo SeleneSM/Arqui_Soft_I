@@ -2,7 +2,7 @@ package services
 
 import (
 	cursoClient "Arqui_Soft_I/backend/clients/curso"
-	materiaClient "Arqui_Soft_I/backend/clients/materia"
+	//materiaClient "Arqui_Soft_I/backend/clients/materia"
 	"Arqui_Soft_I/backend/dto"
 	"Arqui_Soft_I/backend/model"
 	e "Arqui_Soft_I/backend/utils"
@@ -30,10 +30,10 @@ func (s *cursoService) GetCursos() (dto.Cursos, e.ApiError) {
 	var cursosDto dto.Cursos
 
 	for _, curso := range cursos {
-		materia, err := materiaClient.GetMateriaById(curso.Materia_id)
+		/*materia, err := materiaClient.GetMateriaById(curso.Materia_id)
 		if err != nil {
 			return nil, e.NewBadRequestApiError("Failed to get materia for curso")
-		}
+		}*/
 		var cursoDto dto.CursoDto
 		{
 			cursoDto.ID = curso.ID
@@ -42,11 +42,11 @@ func (s *cursoService) GetCursos() (dto.Cursos, e.ApiError) {
 			cursoDto.Materia_id = curso.Materia_id
 			cursoDto.Requisitos = curso.Requisitos
 			cursoDto.Instructor = curso.Instructor
-			cursoDto.Materia.ID = materia.ID
-			cursoDto.Materia.Nombre = materia.Nombre
-			cursoDto.Materia.Duracion = materia.Duracion
-			cursoDto.Materia.Descripcion = materia.Descripcion
-			cursoDto.Materia.Palabras_clave = materia.Palabras_clave
+			//cursoDto.Materia.ID = materia.ID
+			//cursoDto.Materia.Nombre = materia.Nombre
+			//cursoDto.Materia.Duracion = materia.Duracion
+			//cursoDto.Materia.Descripcion = materia.Descripcion
+			//cursoDto.Materia.Palabras_clave = materia.Palabras_clave
 		}
 		cursosDto = append(cursosDto, cursoDto)
 	}
@@ -67,11 +67,11 @@ func (s *cursoService) GetCursoById(id int) (dto.CursoDto, e.ApiError) {
 	cursoDto.Fecha_Inicio = curso.Fecha_Inicio
 	cursoDto.Fecha_Fin = curso.Fecha_Fin
 	cursoDto.Materia_id = curso.Materia_id
-	cursoDto.Materia.Descripcion = curso.Materia.Descripcion
-	cursoDto.Materia.Nombre = curso.Materia.Nombre
-	cursoDto.Materia.Palabras_clave = curso.Materia.Palabras_clave
-	cursoDto.Materia.Duracion = curso.Materia.Duracion
-	cursoDto.Materia.ID = curso.Materia.ID
+	//cursoDto.Materia.Descripcion = curso.Materia.Descripcion
+	//cursoDto.Materia.Nombre = curso.Materia.Nombre
+	//cursoDto.Materia.Palabras_clave = curso.Materia.Palabras_clave
+	//cursoDto.Materia.Duracion = curso.Materia.Duracion
+	//cursoDto.Materia.ID = curso.Materia.ID
 	cursoDto.Requisitos = curso.Requisitos
 	cursoDto.Instructor = curso.Instructor
 
@@ -85,11 +85,11 @@ func (s *cursoService) InsertCurso(cursoDto dto.CursoDto) (dto.CursoDto, e.ApiEr
 	curso.Fecha_Inicio = cursoDto.Fecha_Inicio
 	curso.Fecha_Fin = cursoDto.Fecha_Fin
 	curso.Materia_id = cursoDto.Materia_id
-	curso.Materia.Descripcion = cursoDto.Materia.Descripcion
-	curso.Materia.Nombre = cursoDto.Materia.Nombre
-	curso.Materia.Palabras_clave = cursoDto.Materia.Palabras_clave
-	curso.Materia.Duracion = cursoDto.Materia.Duracion
-	curso.Materia.ID = cursoDto.Materia.ID
+	//curso.Materia.Descripcion = cursoDto.Materia.Descripcion
+	//curso.Materia.Nombre = cursoDto.Materia.Nombre
+	//curso.Materia.Palabras_clave = cursoDto.Materia.Palabras_clave
+	//curso.Materia.Duracion = cursoDto.Materia.Duracion
+	//curso.Materia.ID = cursoDto.Materia.ID
 	curso.Requisitos = cursoDto.Requisitos
 	curso.Instructor = cursoDto.Instructor
 
