@@ -19,7 +19,7 @@ func InsertComentario(comentario model.Comentario) (model.Comentario, error) {
 
 func GetComentariosPorCursoID(cursoID int) (model.Comentarios, error) {
 	var comentarios model.Comentarios
-	if err := Db.Where("curso_id = ?", cursoID).Find(&comentarios).Error; err != nil {
+	if err := Db.Where("id_Curso = ?", cursoID).Find(&comentarios).Error; err != nil {
 		log.Println("Error obteniendo comentarios para curso ID:", cursoID, err)
 		return nil, err
 	}
