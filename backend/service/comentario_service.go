@@ -1,12 +1,12 @@
 package services
 
 import (
-	comentarioClient "Arqui_Soft_I/backend/clients/comentario"
-	userClient "Arqui_Soft_I/backend/clients/user"
+	comentarioClient "Arqui_Soft_I/clients/comentario"
+	userClient "Arqui_Soft_I/clients/user"
 
-	"Arqui_Soft_I/backend/dto"
-	"Arqui_Soft_I/backend/model"
-	e "Arqui_Soft_I/backend/utils"
+	"Arqui_Soft_I/dto"
+	"Arqui_Soft_I/model"
+	e "Arqui_Soft_I/utils"
 
 	"time"
 )
@@ -28,7 +28,10 @@ func init() {
 
 func (s *comentarioService) InsertComentario(comentarioDto dto.ComentarioDto) (dto.ComentarioDto, e.ApiError) {
 	var comentario_DAO model.Comentario
-	usuar := userClient.GetUserById(comentarioDto.UsuarioID)
+	usuar, err := userClient.GetUserById(comentarioDto.UsuarioID)
+	if err != nil {
+		return dto.ComentarioDto{}, e.NewInternalServerApiError("Error geting user by id", err)
+	}
 	//DAO que se carga en la base de datos
 	comentario_DAO.ID_curso = comentarioDto.CursoID
 	comentario_DAO.ID_usuario = comentarioDto.UsuarioID
@@ -48,7 +51,7 @@ func (s *comentarioService) InsertComentario(comentarioDto dto.ComentarioDto) (d
 	comentarioDto.Usuario.ID = usuar.ID
 	comentarioDto.Usuario.Nombre = usuar.Nombre
 
-	comentario_DAO, err := comentarioClient.InsertComentario(comentario_DAO)
+	comentario_DAO, err = comentarioClient.InsertComentario(comentario_DAO)
 	if err != nil {
 		return dto.ComentarioDto{}, e.NewInternalServerApiError("Error creando comentario", err)
 	}

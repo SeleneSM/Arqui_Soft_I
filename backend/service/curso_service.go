@@ -1,11 +1,11 @@
 package services
 
 import (
-	cursoClient "Arqui_Soft_I/backend/clients/curso"
+	cursoClient "Arqui_Soft_I/clients/curso"
 	//materiaClient "Arqui_Soft_I/backend/clients/materia"
-	"Arqui_Soft_I/backend/dto"
-	"Arqui_Soft_I/backend/model"
-	e "Arqui_Soft_I/backend/utils"
+	"Arqui_Soft_I/dto"
+	"Arqui_Soft_I/model"
+	e "Arqui_Soft_I/utils"
 )
 
 type cursoService struct{}

@@ -1,12 +1,12 @@
 package controller
 
 import (
-	service "Arqui_Soft_I/backend/service"
+	service "Arqui_Soft_I/service"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
 
-	"Arqui_Soft_I/backend/dto"
+	dto "Arqui_Soft_I/dto"
 
 	"strconv"
 

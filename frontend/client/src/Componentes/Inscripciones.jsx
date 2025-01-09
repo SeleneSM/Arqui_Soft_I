@@ -97,6 +97,7 @@ function Inscripcion() {
           }).then((response) => response.json())
       );
   
+      const materiaIds = [...new Set(inscripcionesData.map((inscripcion) => inscripcion.materia_id))];
       const fetchMateriaPromises = materiaIds.map((materiaId) =>
           fetch(`http://localhost:8090/materias/${materiaId}`, {
               method: "GET",
@@ -132,7 +133,7 @@ function Inscripcion() {
                   }
               });
   
-              const cursosActualizados = cursosData.map((curso) => ({
+              const cursosActualizados = cursosDisponibles.map((curso) => ({
                   ...curso,
                   nombre_curso: cursos[curso.curso_id] || "",
                   //nombre_materia: materias[curso.materia_id] || "",

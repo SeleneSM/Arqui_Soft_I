@@ -17,7 +17,7 @@ function Admin() {
   const { token } = useParams();
 
   useEffect(() => {
-    fetch(`http://localhost:8090/materias/${materiaId}`)
+    fetch(`http://localhost:8090/materias/${materia.ID}`)
       .then((response) => response.json())
       .then((data) => setMaterias(data))
       .catch((error) => console.error(error));
@@ -139,8 +139,8 @@ function Admin() {
           >
             <option value="">Selecciona una materia</option>
             {materia.map((materia) => (
-              <option key={materia_id} value={materia.id}>
-                {materia.i} 
+              <option key={materia.ID} value={materia.ID}>
+                {materia.ID} 
               </option>
             ))}
           </select>

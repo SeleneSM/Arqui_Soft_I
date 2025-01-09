@@ -1,11 +1,11 @@
 package app
 
 import (
-	comentarioController "Arqui_Soft_I/backend/controller/comentario"
-	cursoController "Arqui_Soft_I/backend/controller/curso"
-	inscripcionController "Arqui_Soft_I/backend/controller/inscripcion"
-	materiaController "Arqui_Soft_I/backend/controller/materia"
-	userController "Arqui_Soft_I/backend/controller/user"
+	comentarioController "Arqui_Soft_I/controller/comentario"
+	cursoController "Arqui_Soft_I/controller/curso"
+	inscripcionController "Arqui_Soft_I/controller/inscripcion"
+	materiaController "Arqui_Soft_I/controller/materia"
+	userController "Arqui_Soft_I/controller/user"
 )
 
 // Endpoints

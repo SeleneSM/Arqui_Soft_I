@@ -1,13 +1,13 @@
 package db
 
 import (
-	comentarioClient "Arqui_Soft_I/backend/clients/comentario"
-	cursoClient "Arqui_Soft_I/backend/clients/curso"
-	incripcionClient "Arqui_Soft_I/backend/clients/inscripcion"
-	materiaClient "Arqui_Soft_I/backend/clients/materia"
-	userClient "Arqui_Soft_I/backend/clients/user"
+	comentarioClient "Arqui_Soft_I/clients/comentario"
+	cursoClient "Arqui_Soft_I/clients/curso"
+	incripcionClient "Arqui_Soft_I/clients/inscripcion"
+	materiaClient "Arqui_Soft_I/clients/materia"
+	userClient "Arqui_Soft_I/clients/user"
 
-	"Arqui_Soft_I/backend/model"
+	"Arqui_Soft_I/model"
 	"time"
 
 	"errors"

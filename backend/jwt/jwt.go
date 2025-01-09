@@ -1,7 +1,7 @@
 package jwtToken
 
 import (
-	"Arqui_Soft_I/backend/dto"
+	"Arqui_Soft_I/dto"
 
 	//jwt "github.com/dgrijalva/jwt-go"
 	jwt "github.com/golang-jwt/jwt/v4"

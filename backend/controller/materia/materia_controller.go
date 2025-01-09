@@ -1,8 +1,8 @@
 package controller
 
 import (
-	"Arqui_Soft_I/backend/dto"
-	service "Arqui_Soft_I/backend/service"
+	"Arqui_Soft_I/dto"
+	service "Arqui_Soft_I/service"
 	"net/http"
 	"strconv"
 

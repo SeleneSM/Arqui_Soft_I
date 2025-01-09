@@ -1,7 +1,7 @@
 package client
 
 import (
-	"Arqui_Soft_I/backend/model" //Llama a model
+	"Arqui_Soft_I/model" //Llama a model
 
 	"github.com/jinzhu/gorm" //Importa el gorm
 	log "github.com/sirupsen/logrus"

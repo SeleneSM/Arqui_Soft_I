@@ -1,10 +1,10 @@
 package services
 
 import (
-	userClient "Arqui_Soft_I/backend/clients/user"
-	"Arqui_Soft_I/backend/dto"
-	"Arqui_Soft_I/backend/model"
-	e "Arqui_Soft_I/backend/utils"
+	userClient "Arqui_Soft_I/clients/user"
+	"Arqui_Soft_I/dto"
+	"Arqui_Soft_I/model"
+	e "Arqui_Soft_I/utils"
 
 	"golang.org/x/crypto/bcrypt"
 )
@@ -19,6 +19,7 @@ type userServiceInterface interface {
 	GetUsers() (dto.Users, e.ApiError)
 	RegisterUser(userDto dto.UserDto) (dto.UserDto, e.ApiError)
 	GetUserById(id int) (dto.UserDto, e.ApiError)
+	//GetUserByUsername(userName string) (dto.UserDto, e.ApiError)
 }
 
 var (
@@ -34,10 +35,11 @@ func init() {
 // es correcta. La implementacion del login se hace en el front
 func (s *userService) UserAuth(userDto dto.UserDto) (bool, string, int) {
 	//el operador := declara e inicializa!!
-	user := userClient.GetUserByUsername(userDto.Username) //Accede a la bd
+	var name = userDto.Username
+	user, err := userClient.GetUserByUsername(name) //Accede a la bd
 	//busca en la bd al usuario por su nombre de usuario(Username)
 
-	err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userDto.Password))
+	err = bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(userDto.Password))
 	if err != nil {
 		return false, "", -1
 	}
@@ -47,9 +49,13 @@ func (s *userService) UserAuth(userDto dto.UserDto) (bool, string, int) {
 }
 
 func (s *userService) GetUsers() (dto.Users, e.ApiError) {
-
-	var users model.Users = userClient.GetUsers()
+	var users model.Users
 	var usersDto dto.Users
+
+	users, err := userClient.GetUsers()
+	if err != nil {
+		return nil, e.NewInternalServerApiError("error fetching users", err)
+	}
 
 	for _, user := range users {
 		var userDto dto.UserDto
@@ -70,7 +76,7 @@ func (s *userService) RegisterUser(userDto dto.UserDto) (dto.UserDto, e.ApiError
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(userDto.Password), bcrypt.DefaultCost)
 
 	if err != nil {
-
+		return dto.UserDto{}, e.NewInternalServerApiError("error hashing password", err)
 	}
 	var user model.User
 
@@ -80,7 +86,10 @@ func (s *userService) RegisterUser(userDto dto.UserDto) (dto.UserDto, e.ApiError
 	user.Username = userDto.Username
 	user.Rol = userDto.Rol
 
-	user = userClient.RegisterUser(user)
+	user, err = userClient.RegisterUser(user)
+	if err != nil {
+		return dto.UserDto{}, e.NewInternalServerApiError("error registrando users", err)
+	}
 
 	userDto.ID = user.ID
 
@@ -89,8 +98,13 @@ func (s *userService) RegisterUser(userDto dto.UserDto) (dto.UserDto, e.ApiError
 
 func (s *userService) GetUserById(id int) (dto.UserDto, e.ApiError) {
 
-	var user model.User = userClient.GetUserById(id)
+	var user model.User
 	var userDto dto.UserDto
+
+	user, err := userClient.GetUserById(id)
+	if err != nil {
+		return dto.UserDto{}, e.NewInternalServerApiError("error geting users by id", err)
+	}
 
 	if user.ID == 0 {
 		return userDto, e.NewBadRequestApiError("user not found")
