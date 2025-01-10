@@ -20,7 +20,7 @@ function FormularioLogin({handleLogin}) {
       };
   
       try {
-        const response = await fetch('http://localhost:8090/users/auth', {
+        const response = await fetch('http://host.docker.internal:8090/users/auth', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

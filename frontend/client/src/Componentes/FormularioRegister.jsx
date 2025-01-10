@@ -21,7 +21,7 @@ function FormularioRegister() {
     };
 
     try {
-      const response = await fetch('http://localhost:8090/registrar_usuario', {
+      const response = await fetch('http://host.docker.internal:8090/registrar_usuario', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

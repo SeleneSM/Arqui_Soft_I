@@ -15,7 +15,7 @@ function Inscripcion() {
     const { token, userId } = useParams();
 
     const buscarCursosDisponibles = () => {
-        fetch("http://localhost:8090/cursos", {
+        fetch("http://host.docker.internal:8090/cursos", {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -32,7 +32,7 @@ function Inscripcion() {
     const buscarMaterias = (palabrasClave) => {
         console.log('Buscando materias con palabras clave:', palabrasClave);
         
-        fetch(`http://localhost:8090/materia/search/${palabrasClave}`, {
+        fetch(`http://host.docker.internal:8090/materia/search/${palabrasClave}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json"
@@ -55,7 +55,7 @@ function Inscripcion() {
       
 
     const fetchTodasLasInscripciones = () => {
-        fetch(`http://localhost:8090/inscripciones_por_usuario/${userId}`, {
+        fetch(`http://host.docker.internal:8090/inscripciones_por_usuario/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",
@@ -89,7 +89,7 @@ function Inscripcion() {
       const userIds = [...new Set(inscripcionesData.map((inscripciones) => inscripciones.id_usuario))];
   
       const fetchCursoPromises = cursoIds.map((cursoId) =>
-          fetch(`http://localhost:8090/cursos/${cursoId}`, {
+          fetch(`http://host.docker.internal:8090/cursos/${cursoId}`, {
               method: "GET",
               headers: {
                   "Content-Type": "application/json",
@@ -99,7 +99,7 @@ function Inscripcion() {
   
       const materiaIds = [...new Set(inscripcionesData.map((inscripcion) => inscripcion.materia_id))];
       const fetchMateriaPromises = materiaIds.map((materiaId) =>
-          fetch(`http://localhost:8090/materias/${materiaId}`, {
+          fetch(`http://host.docker.internal:8090/materias/${materiaId}`, {
               method: "GET",
               headers: {
                   "Content-Type": "application/json",
@@ -108,7 +108,7 @@ function Inscripcion() {
       );
 
       const fetchUserPromises = userIds.map((userId) =>
-        fetch(`http://localhost:8090/users/${userId}`, {
+        fetch(`http://host.docker.internal:8090/users/${userId}`, {
             method: "GET",
             headers: {
                 "Content-Type": "application/json",

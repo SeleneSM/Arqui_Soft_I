@@ -47,3 +47,12 @@ func InsertMateria(materia model.Materia) model.Materia {
 	log.Debug("Materia creada: ", materia.ID)
 	return materia
 }
+
+func GetMaterias() model.Materias {
+	var materias model.Materias
+	Db.Find(&materias)
+
+	log.Debug("Materias: ", materias)
+
+	return materias
+}

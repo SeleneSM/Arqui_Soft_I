@@ -60,3 +60,18 @@ func MateriaInsert(c *gin.Context) {
 	}
 	c.JSON(http.StatusCreated, materiaDto)
 }
+
+func GetMaterias(c *gin.Context) {
+
+	var materiasDto dto.Materias
+	var err error
+
+	materiasDto, err = service.MateriaService.GetMaterias()
+
+	if err != nil {
+		c.JSON(http.StatusBadRequest, err.Error())
+		return
+	}
+
+	c.JSON(http.StatusOK, materiasDto)
+}

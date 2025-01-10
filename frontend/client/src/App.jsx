@@ -9,6 +9,33 @@ import FormularioRegister from './Componentes/FormularioRegister.jsx';
 import Cursos from './Componentes/Cursos.jsx';
 import Inscripciones from './Componentes/Inscripciones.jsx';
 
+
+async function fetchMaterias(cursos) {
+  let endpointBase = "http://host.docker.internal:8090/materia";
+  try {
+    // Mapeamos los cursos a sus respectivos fetch basados en `materia_id`
+    const fetchPromises = cursos.map(curso =>
+      fetch(`${endpointBase}/${curso.materia_id}`)
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Error en materia_id ${curso.materia_id}`);
+          }
+          return response.json(); // Parseamos la respuesta a JSON
+        })
+        .then(materia => ({ ...curso, materia })) // Agregamos la materia al curso
+    );
+
+    // Esperamos a que todos los fetch se completen
+    const cursosConMaterias = await Promise.all(fetchPromises);
+    return cursosConMaterias;
+
+  } catch (error) {
+    console.error("Error al obtener materias:", error);
+    throw error;
+  }
+}
+
+
 function App() {
 
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -37,13 +64,21 @@ function App() {
   };
 
   useEffect(() => {
-    fetch('http://localhost:8090/cursos')
-      .then((response) => response.json())
-      .then((data) => setCursos(data))
-      .catch((error) => console.error(error));
+    const obtenerCursos = async () => {
+      try {
+        const response = await fetch('http://host.docker.internal:8090/cursos');
+        const data = await response.json();
+        
+        // Wait for the materias to be fetched
+        const cs = await fetchMaterias(data); // Wait for fetchMaterias to resolve
+        setCursos(cs); // Set the cursos state once materias are fetched
+      } catch (error) {
+        console.error("Error al obtener cursos o materias:", error);
+      }
+    }
 
     if (isLoggedIn) {
-      fetch(`http://localhost:8090/inscripciones_por_usuario/${userId}`, {
+      fetch(`http://host.docker.internal:8090/inscripciones_por_usuario/${userId}`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json'
@@ -52,7 +87,9 @@ function App() {
         .then((response) => response.json())
         .then((data) => setInscripciones(data))
         .catch((error) => console.error(error));
-    }
+    };
+
+    obtenerCursos();
   }, [isLoggedIn, userId]);
 
   return (

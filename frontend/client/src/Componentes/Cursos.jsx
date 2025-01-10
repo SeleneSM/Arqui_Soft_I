@@ -39,7 +39,7 @@ function Cursos(props) {
   const realizarInscripcion = () => {
     console.log('Iniciando inscripción para el curso:', curso.id);
     console.log('User ID:', userId);
-    fetch("http://localhost:8090/inscribir", {
+    fetch("http://host.docker.internal:8090/inscribir", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
