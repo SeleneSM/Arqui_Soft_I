@@ -16,6 +16,10 @@ func UploadFileHandler(c *gin.Context) {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error retrieving the file"})
 		return
 	}
+
+	// Log para verificar el nombre del archivo recibido
+	c.JSON(http.StatusOK, gin.H{"file_name": handler.Filename, "curso_id": c.PostForm("curso_id")})
+
 	defer file.Close()
 
 	courseIdStr := c.PostForm("curso_id")
@@ -35,7 +39,10 @@ func UploadFileHandler(c *gin.Context) {
 
 	newFile, apiErr := Service.CreateFile(fileDomain, fileContent)
 	if apiErr != nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": apiErr.Message()})
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error":    apiErr.Message(),
+			"location": "service layer",
+		})
 		return
 	}
 

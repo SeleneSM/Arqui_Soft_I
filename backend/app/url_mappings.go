@@ -1,6 +1,7 @@
 package app
 
 import (
+	archivoController "Arqui_Soft_I/controller/archivo"
 	comentarioController "Arqui_Soft_I/controller/comentario"
 	cursoController "Arqui_Soft_I/controller/curso"
 	inscripcionController "Arqui_Soft_I/controller/inscripcion"
@@ -29,6 +30,7 @@ func mapUrls() {
 	router.POST("/crear_materia", materiaController.MateriaInsert)
 	router.POST("/crear_curso", cursoController.CursoInsert)
 	router.POST("/comentarios", comentarioController.InsertComentario)
-
+	// Aquí defines el endpoint y lo vinculas con tu controlador
+	router.POST("/upload-file", archivoController.UploadFileHandler)
 	//router.POST("cursos", cursoController.)
 }

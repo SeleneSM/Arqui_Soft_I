@@ -4,9 +4,6 @@ import pythonImg from '../imagenes/python.png'
 import cImg from '../imagenes/c.png'
 import rImg from '../imagenes/r.png'
 
-
-
-
 function Cursos(props) {
   const { curso, isLoggedIn, userId } = props;
   const imageMap = {
