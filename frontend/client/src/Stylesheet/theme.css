@@ -1,0 +1,41 @@
+:root {
+    /* Nuevos colores más modernos */
+    --primary-color: #4f46e5;
+    --primary-dark: #4338ca;
+    --secondary-color: #06b6d4;
+    --accent-color: #8b5cf6;
+    --success-color: #10b981;
+    --warning-color: #f59e0b;
+    --error-color: #ef4444;
+    --background-primary: #f9fafb;
+    --background-secondary: #f3f4f6;
+    --text-primary: #111827;
+    --text-secondary: #4b5563;
+    --border-color: #e5e7eb;
+  
+    /* Nuevos gradientes */
+    --gradient-primary: linear-gradient(135deg, #4f46e5 0%, #06b6d4 100%);
+    --gradient-secondary: linear-gradient(135deg, #8b5cf6 0%, #4f46e5 100%);
+    --gradient-accent: linear-gradient(135deg, #06b6d4 0%, #10b981 100%);
+  
+    /* Sombras mejoradas */
+    --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+    --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+    --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1);
+  
+    /* Espaciado */
+    --spacing-xs: 0.5rem;
+    --spacing-sm: 1rem;
+    --spacing-md: 1.5rem;
+    --spacing-lg: 2rem;
+    --spacing-xl: 3rem;
+  
+    /* Bordes */
+    --border-radius-sm: 0.375rem;
+    --border-radius-md: 0.75rem;
+    --border-radius-lg: 1rem;
+    --border-radius-xl: 1.5rem;
+    --border-radius-full: 9999px;
+  }
+  

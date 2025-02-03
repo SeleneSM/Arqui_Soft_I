@@ -6,6 +6,16 @@ import rImg from '../imagenes/r.png'
 
 function Cursos(props) {
   const { curso, isLoggedIn, userId } = props;
+
+  // Validación de props
+  if (!curso) {
+    console.error('Curso props es undefined');
+    return <div>Error: Datos del curso no disponibles</div>;
+  }
+
+  // Asegurar que materia existe
+  const materia = curso.materia || { nombre: 'Curso sin nombre' };
+
   const imageMap = {
     'Python': pythonImg,
     'C++': cImg,
@@ -74,37 +84,50 @@ function Cursos(props) {
   return (
     <div className="nombre-materia1">
       <h2>{curso.materia.nombre}</h2>
-      <img src={imageMap[curso.materia.nombre]} alt={`Imagen de ${curso.materia.nombre}`} className="imagen-curso" />
-      <p className="fecha-inicio">
-      Fecha inicio: {formatDate(curso.fecha_inicio)}
-      </p>
-      <p className="fecha-fin">
-      Fecha fin: {formatDate(curso.fecha_fin)}
-      </p>
-      <p className="informacion-instructor">
-        Sobre el instructor: {curso.instructor}
-      </p>
-      <p className="requisitos">
-        Requisitos: {curso.requisitos}
-      </p>
-      {curso.materia ? (
-        <div className="materia">
+      {imageMap[curso.materia.nombre] && (
+        <img 
+          src={imageMap[curso.materia.nombre]} 
+          alt={`Imagen de ${curso.materia.nombre}`} 
+          className="imagen-curso" 
+        />
+      )}
+      <div className="curso-info">
+        <div className="fechas-info">
+          <p className="fecha-inicio">
+            <strong>Inicio:</strong> {formatDate(curso.fecha_inicio)}
+          </p>
+          <p className="fecha-fin">
+            <strong>Fin:</strong> {formatDate(curso.fecha_fin)}
+          </p>
+        </div>
+        
+        <div className="materia-info">
           <p className="duracion">
-            Duración en meses: {curso.materia.duracion}
+            <strong>Duración:</strong> {curso.materia.duracion} meses
           </p>
           <p className="descripcion">
-            Descripción: {curso.materia.descripcion}
+            {curso.materia.descripcion}
           </p>
           <p className="palabras-clave">
-            Palabras clave: {curso.materia.palabras_clave}
+            <strong>Tags:</strong> {curso.materia.palabras_clave}
           </p>
+        </div>
+
+        <div className="curso-detalles">
+          <p className="informacion-instructor">
+            <strong>Instructor:</strong> {curso.instructor}
+          </p>
+          <p className="requisitos">
+            <strong>Requisitos:</strong> {curso.requisitos}
+          </p>
+        </div>
+
+        {isLoggedIn && (
           <div className="boton-inscripcion">
             <button onClick={handleInscripcionClick}>Inscribirme</button>
           </div>
-        </div>
-      ) : (
-        <p>No hay materia disponible</p>
-      )}
+        )}
+      </div>
     </div>
   );
 }

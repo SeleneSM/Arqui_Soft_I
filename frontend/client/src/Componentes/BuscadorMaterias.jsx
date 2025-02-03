@@ -1,23 +1,39 @@
 import React, { useState } from 'react';
 
 function BuscadorMaterias({ buscarMaterias }) {
-  const [palabrasClave, setPalabrasClave] = useState('');
+    const [palabrasClave, setPalabrasClave] = useState('');
 
-  const handleBuscarClick = () => {
-    buscarMaterias(palabrasClave);
-  };
+    const handleSubmit = (e) => {
+        e.preventDefault();
+        if (palabrasClave.trim()) {
+            buscarMaterias(palabrasClave);
+        }
+    };
 
-  return (
-    <div>
-      <input
-        type="text"
-        value={palabrasClave}
-        onChange={(e) => setPalabrasClave(e.target.value)}
-        placeholder="Buscar materias por palabras clave"
-      />
-      <button onClick={handleBuscarClick}>Buscar</button>
-    </div>
-  );
+    const handleChange = (e) => {
+        const valor = e.target.value;
+        setPalabrasClave(valor);
+        
+        // Si el input está vacío, limpiamos los resultados
+        if (!valor.trim()) {
+            buscarMaterias(''); // Esto disparará la limpieza de resultados
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="buscador-form">
+            <input
+                type="text"
+                value={palabrasClave}
+                onChange={handleChange}
+                placeholder="Buscar materias..."
+                className="buscador-input"
+            />
+            <button type="submit" disabled={!palabrasClave.trim()}>
+                Buscar
+            </button>
+        </form>
+    );
 }
 
 export default BuscadorMaterias;

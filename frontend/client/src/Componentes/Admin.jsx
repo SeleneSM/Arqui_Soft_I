@@ -30,6 +30,11 @@ function Admin() {
       .catch((error) => console.error(error));
   }, []);
 
+  const formatDateForAPI = (dateString) => {
+    // Convierte YYYY-MM-DD a YYYY-MM-DDT00:00:00Z para que sea aceptado por el API (basicamente para que respete el formato que Go maneja las fechas por defecto)
+    return `${dateString}T00:00:00Z`;
+  };
+
   const crearNuevoCurso = async (event) => {
     event.preventDefault();
 
@@ -43,40 +48,46 @@ function Admin() {
     }
 
     const cursoData = {
-      fecha_inicio: formatDate(nuevoCurso.fecha_Inicio),
-      fecha_fin: formatDate(nuevoCurso.fecha_Fin),
+      fecha_inicio: formatDateForAPI(nuevoCurso.fecha_Inicio),
+      fecha_fin: formatDateForAPI(nuevoCurso.fecha_Fin),
       requisitos: nuevoCurso.requisitos,
       instructor: nuevoCurso.instructor,
-      materia_id: Number(nuevoCurso.materia_id),
+      materia_id: parseInt(nuevoCurso.materia_id),
     };
+
+    console.log('Datos a enviar:', cursoData); // Para debug
 
     try {
       const cursoResponse = await fetch("http://host.docker.internal:8090/crear_curso", {
         method: "POST",
         headers: {
-          Authorization: `${token}`,
+          "Authorization": `Bearer ${token}`, // Agregamos 'Bearer' para indicar que es un token JWT
           "Content-Type": "application/json",
         },
         body: JSON.stringify(cursoData),
       });
 
-      const cursoResult = await cursoResponse.json();
+      // Imprimir la respuesta completa para debug
+      const responseText = await cursoResponse.text();
+      console.log('Respuesta del servidor:', responseText);
 
-      if (cursoResponse.ok) {
-        setCursos((prevCursos) => [...prevCursos, cursoResult]);
-        alert("Se ha creado un nuevo curso con éxito");
-        setNuevoCurso({
-          fecha_Inicio: '',
-          fecha_Fin: '',
-          materia_id: null,
-          requisitos: '',
-          instructor: '',
-        });
-      } else {
-        console.error(cursoResult.error);
+      if (!cursoResponse.ok) {
+        throw new Error(`Error ${cursoResponse.status}: ${responseText}`);
       }
+
+      const cursoResult = JSON.parse(responseText);
+      setCursos((prevCursos) => [...prevCursos, cursoResult]);
+      alert("Se ha creado un nuevo curso con éxito");
+      setNuevoCurso({
+        fecha_Inicio: '',
+        fecha_Fin: '',
+        materia_id: null,
+        requisitos: '',
+        instructor: '',
+      });
     } catch (error) {
-      console.error("Error al crear el curso:", error);
+      alert(`Error al crear el curso: ${error.message}`);
+      console.error("Error completo:", error);
     }
   };
 
@@ -88,20 +99,15 @@ function Admin() {
     }));
   };
 
-
-    const formatDate = (dateString) => {
-      // Create a new Date object from the string
-      const isoDate = new Date(dateString);
-    
-      // Extract day, month, and year
-      const day = isoDate.getDate().toString().padStart(2, '0'); // Ensure two digits for day
-      const month = (isoDate.getMonth() + 1).toString().padStart(2, '0'); // Ensure two digits for month
-      const year = isoDate.getFullYear();
-    
-      // Return in DD/MM/YYYY format
+  // La función formatDate solo la usamos para mostrar las fechas, no para enviarlas
+  const formatDate = (dateString) => {
+    try {
+      const [year, month, day] = dateString.split('-');
       return `${day}/${month}/${year}`;
-    };
-    
+    } catch {
+      return dateString; // Si el formato es diferente, retornamos el original
+    }
+  };
 
   return (
     <div>

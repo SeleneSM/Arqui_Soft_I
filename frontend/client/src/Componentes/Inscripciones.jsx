@@ -1,199 +1,416 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
+import '../Stylesheet/theme.css';
 import '../Stylesheet/Inscripciones.css';
-import { useParams } from 'react-router-dom';
 import Cursos from '../Componentes/Cursos';  
 import BuscadorMaterias from '../Componentes/BuscadorMaterias'; 
 
-function Inscripcion() {
-    const [cursosDisponibles, setCursosDisponibles] = useState([]);
-    const [cursos, setCursos] = useState([]);
-    const [usuarios, setUsuarios] = useState([]);
+function Inscripcion({ userId, token }) {
     const [inscripciones, setInscripciones] = useState([]);
-    const [contadorInscripcion, setContadorInscripcion] = useState(1);
+    const [isLoading, setIsLoading] = useState(false);
+    const [error, setError] = useState(null);
+    const [cursosDisponibles, setCursosDisponibles] = useState([]);
     const [materias, setMaterias] = useState([]);
-    //NO TOMA EL USERID
-    const { token, userId } = useParams();
+    const [userData, setUserData] = useState(null);
+    const [activeSection, setActiveSection] = useState('buscar');
 
-    const buscarCursosDisponibles = () => {
-        fetch("http://host.docker.internal:8090/cursos", {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `${token}`,
-            }
-        })
-        .then((response) => response.json())
-        .then((data) => {
-            setCursosDisponibles(data);
-        })
-        .catch((error) => console.error(error));
+    // Agregar función formatDate
+    const formatDate = (dateString) => {
+        if (!dateString) return 'Fecha no disponible';
+        try {
+            const date = new Date(dateString);
+            const day = date.getDate().toString().padStart(2, '0');
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const year = date.getFullYear();
+            return `${day}/${month}/${year}`;
+        } catch (error) {
+            console.error('Error al formatear fecha:', error);
+            return dateString;
+        }
     };
 
+    // Definir todas las funciones antes del useEffect
+    const obtenerDetalles = async (inscripcionesData) => {
+        try {
+            // Primero obtenemos todas las materias
+            const materiasResponse = await fetch('http://host.docker.internal:8090/materias');
+            if (!materiasResponse.ok) {
+                throw new Error('Error al obtener las materias');
+            }
+            const materiasData = await materiasResponse.json();
+
+            // Crear un mapa de materias para búsqueda rápida
+            const materiasMap = materiasData.reduce((acc, materia) => {
+                acc[materia.id] = materia;
+                return acc;
+            }, {});
+
+            const inscripcionesConDetalles = await Promise.all(
+                inscripcionesData.map(async (inscripcion) => {
+                    if (!inscripcion.id_curso) {
+                        console.error('Inscripción sin id_curso:', inscripcion);
+                        return null;
+                    }
+
+                    // Obtener detalles del curso
+                    const cursoResponse = await fetch(
+                        `http://host.docker.internal:8090/cursos/${inscripcion.id_curso}`,
+                        {
+                            headers: { "Content-Type": "application/json" }
+                        }
+                    );
+                    
+                    if (!cursoResponse.ok) {
+                        throw new Error(`Error al obtener detalles del curso ${inscripcion.id_curso}`);
+                    }
+                    
+                    const cursoData = await cursoResponse.json();
+                    
+                    // Obtener la materia del mapa local
+                    const materiaData = materiasMap[cursoData.materia_id] || {
+                        nombre: 'Materia no encontrada',
+                        duracion: 0,
+                        descripcion: 'Información no disponible',
+                        palabras_clave: ''
+                    };
+                    
+                    return {
+                        id: inscripcion.id,
+                        curso_id: inscripcion.id_curso,
+                        fecha_inscripcion: inscripcion.fecha_inscripcion,
+                        curso: {
+                            instructor: cursoData.instructor,
+                            fecha_inicio: cursoData.fecha_inicio,
+                            fecha_fin: cursoData.fecha_fin,
+                            requisitos: cursoData.requisitos
+                        },
+                        materia: materiaData
+                    };
+                })
+            );
+
+            const resultadosFiltrados = inscripcionesConDetalles.filter(item => item !== null);
+            console.log('Inscripciones procesadas:', resultadosFiltrados);
+            return resultadosFiltrados;
+
+        } catch (error) {
+            console.error('Error al obtener detalles:', error);
+            return [];
+        }
+    };
+
+    const fetchTodasLasInscripciones = useCallback(async () => {
+        setIsLoading(true);
+        setError(null);
+        try {
+            console.log('Fetching inscripciones para usuario:', userId);
+            const response = await fetch(
+                `http://host.docker.internal:8090/inscripciones_por_usuario/${userId}`,
+                {
+                    method: "GET",
+                    headers: {
+                        "Content-Type": "application/json"
+                    }
+                }
+            );
+
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+
+            const inscripcionesData = await response.json();
+            console.log('Datos de inscripciones recibidos:', inscripcionesData);
+
+            if (inscripcionesData && inscripcionesData.length > 0) {
+                const inscripcionesConDetalles = await obtenerDetalles(inscripcionesData);
+                setInscripciones(inscripcionesConDetalles);
+            } else {
+                setInscripciones([]);
+            }
+        } catch (error) {
+            console.error('Error en fetchTodasLasInscripciones:', error);
+            setError(error.message);
+        } finally {
+            setIsLoading(false);
+        }
+    }, [userId]);
+
+    const buscarCursosDisponibles = useCallback(async () => {
+        try {
+            // Primero obtenemos todos los cursos
+            const cursosResponse = await fetch("http://host.docker.internal:8090/cursos");
+            const cursosData = await cursosResponse.json();
+
+            // Obtenemos todas las materias
+            const materiasResponse = await fetch("http://host.docker.internal:8090/materias");
+            const materiasData = await materiasResponse.json();
+
+            // Crear un mapa de materias para búsqueda rápida
+            const materiasMap = materiasData.reduce((acc, materia) => {
+                acc[materia.id] = materia;
+                return acc;
+            }, {});
+
+            // Combinar cursos con sus materias correspondientes
+            const cursosConMaterias = cursosData.map(curso => ({
+                ...curso,
+                materia: materiasMap[curso.materia_id] || { 
+                    nombre: 'Materia no encontrada',
+                    duracion: 0,
+                    descripcion: 'Información no disponible',
+                    palabras_clave: ''
+                }
+            }));
+
+            console.log('Cursos con materias:', cursosConMaterias);
+            setCursosDisponibles(cursosConMaterias);
+        } catch (error) {
+            console.error('Error al cargar cursos:', error);
+            setError('Error al cargar los cursos disponibles');
+        }
+    }, []);
+
+    const fetchUserData = useCallback(async () => {
+        try {
+            const response = await fetch(`http://host.docker.internal:8090/users/${userId}`, {
+                headers: {
+                    "Content-Type": "application/json"
+                }
+            });
+
+            if (!response.ok) {
+                throw new Error('Error al obtener datos del usuario');
+            }
+
+            const data = await response.json();
+            setUserData(data);
+        } catch (error) {
+            console.error('Error:', error);
+        }
+    }, [userId]);
+
+    useEffect(() => {
+        console.log('UseEffect ejecutándose con userId:', userId);
+        if (userId) {
+            const cargarDatos = async () => {
+                setIsLoading(true);
+                try {
+                    await Promise.all([
+                        fetchTodasLasInscripciones(),
+                        buscarCursosDisponibles(),
+                        fetchUserData()
+                    ]);
+                } catch (error) {
+                    console.error('Error al cargar datos:', error);
+                    setError('Error al cargar los datos');
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            cargarDatos();
+        }
+    }, [userId, fetchTodasLasInscripciones, buscarCursosDisponibles, fetchUserData]); // Agregamos las dependencias correctas
+
     const buscarMaterias = (palabrasClave) => {
+        if (!palabrasClave) {
+            // Si no hay palabras clave, limpiamos los resultados
+            setMaterias([]);
+            return;
+        }
+
         console.log('Buscando materias con palabras clave:', palabrasClave);
         
         fetch(`http://host.docker.internal:8090/materia/search/${palabrasClave}`, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json"
-          },
+            method: "GET",
+            headers: {
+                "Content-Type": "application/json"
+            },
         })
         .then((response) => {
-          if (!response.ok) {
-            throw new Error('Error al buscar materias');
-          }
-          return response.json();
+            if (!response.ok) {
+                throw new Error('Error al buscar materias');
+            }
+            return response.json();
         })
         .then((materias) => {
-          setMaterias(materias);
+            setMaterias(materias);
         })
         .catch((error) => {
-          console.error('Error al buscar materias:', error);
+            console.error('Error al buscar materias:', error);
+            setMaterias([]); // En caso de error, también limpiamos los resultados
         });
-      };
-      
-      
-
-    const fetchTodasLasInscripciones = () => {
-        fetch(`http://host.docker.internal:8090/inscripciones_por_usuario/${userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-                "Authorization": `${token}`,
-            },
-        })
-        .then((response) => {
-          //ESTE ES EL QUE NO TOMA BIEN EL userId
-            console.log('User ID:', userId);
-
-            console.log('Response status:', response.status);
-            return response.json();
-          })
-        .then((data) => {
-            console.log('Data recibida:', data);
-
-            if (data && data.length > 0) {
-              console.log('Data de inscripciones:', data);
-              obtenerDetalles(data);
-            } else {
-              console.log('No hay inscripciones para el usuario');
-              setInscripciones([]);
-            }})
-        .catch((error) => console.error(error));
     };
-    
 
-    const obtenerDetalles = (inscripcionesData) => {
-      const cursoIds = [...new Set(inscripcionesData.map((inscripciones) => inscripciones.curso_id))];
-      //const materiaIds = [...new Set(cursosData.map((curso) => curso.materia_id))];
-      const userIds = [...new Set(inscripcionesData.map((inscripciones) => inscripciones.id_usuario))];
-  
-      const fetchCursoPromises = cursoIds.map((cursoId) =>
-          fetch(`http://host.docker.internal:8090/cursos/${cursoId}`, {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-          }).then((response) => response.json())
-      );
-  
-      const materiaIds = [...new Set(inscripcionesData.map((inscripcion) => inscripcion.materia_id))];
-      const fetchMateriaPromises = materiaIds.map((materiaId) =>
-          fetch(`http://host.docker.internal:8090/materias/${materiaId}`, {
-              method: "GET",
-              headers: {
-                  "Content-Type": "application/json",
-              },
-          }).then((response) => response.json())
-      );
+    // Modificar el renderizado de los cursos disponibles
+    const renderCursosDisponibles = () => {
+        return cursosDisponibles.map((curso) => {
+            // Verificar que el curso tiene todos los datos necesarios
+            if (!curso || !curso.id) {
+                console.error('Curso inválido:', curso);
+                return null;
+            }
 
-      const fetchUserPromises = userIds.map((userId) =>
-        fetch(`http://host.docker.internal:8090/users/${userId}`, {
-            method: "GET",
-            headers: {
-                "Content-Type": "application/json",
-            },
-        }).then((response) => response.json())
-    );
+            return (
+                <Cursos
+                    key={curso.id}
+                    curso={{
+                        ...curso,
+                        materia: { nombre: 'Curso', ...curso.materia } // Proporcionar un valor por defecto
+                    }}
+                    isLoggedIn={true}
+                    userId={userId}
+                />
+            );
+        }).filter(Boolean); // Filtrar elementos nulos
+    };
 
-  
-      Promise.all([...fetchCursoPromises, ...fetchMateriaPromises, ...fetchUserPromises])
-          .then((results) => {
-              const cursos = {};
-              //const materias = {};
-              const users = {};
-  
-              results.forEach((result) => {
-                  if (result.type === "curso") {
-                      cursos[result.id] = result.nombre_curso;
-                  //} else if (result.type === "materia") {
-                      //materias[result.id] = result.nombre_materia;
-                  } else if (result.type === "users") {
-                    users[result.id] = result.user;
-                  }
-              });
-  
-              const cursosActualizados = cursosDisponibles.map((curso) => ({
-                  ...curso,
-                  nombre_curso: cursos[curso.curso_id] || "",
-                  //nombre_materia: materias[curso.materia_id] || "",
-                  user: users[curso.id_usuario] || "",
-              }));
-  
-              setCursos(cursosActualizados);
-          })
-          .catch((error) => console.error(error));
-  };
-  
+    const handleNavClick = (sectionId) => {
+        setActiveSection(sectionId);
+    };
 
-   return (
-        <div className="contenedor-principal">
-            <h4 className="titulo-inscripciones">Mis inscripciones:</h4>
-            <div className="contenedor-inscripciones-usuario">
-                {inscripciones.length > 0 ? (
-                    inscripciones.map((inscripcion, index) => (
-                        <div key={inscripcion.id} className="inscripcion-item">
-                            <p className="subtitulo-inscripcion">Datos de la inscripción {contadorInscripcion + index}:</p>
-                            <div className="detalle-inscripcion">
-                                <p>Curso: {inscripcion.curso_nombre}</p>
-                                <p>Fecha inicio: {inscripcion.fechaInicio}</p>
-                                <p>Fecha fin: {inscripcion.fechaFin}</p>
+    return (
+        <div className="learning-platform">
+            <div className="side-panel">
+                <div className="profile-section">
+                    <div className="profile-avatar">👤</div>
+                    {userData && (
+                        <div className="user-info">
+                            <p className="user-name">{userData.nombre} {userData.apellido}</p>
+                            <div className="user-details">
+                                <div className="detail-item">
+                                    <span className="detail-label">ID: {userData.id}</span>
+                                    <span className="detail-value">{userData.dni}</span>
+                                </div>
+                                <div className="detail-item">
+                                    <span className="detail-label">Rol:</span>
+                                    <span className="detail-value">{userData.rol}</span>
+                                </div>
                             </div>
                         </div>
-                    ))
-                ) : (
-                    <p>No tienes inscripciones realizadas.</p>
-                )}
-            </div>
-            <h2>Cursos disponibles:</h2>
-            <div className="contenedor-cursos">
-                {cursosDisponibles.length > 0 ? (
-                    cursosDisponibles.map((curso) => (
-                        <Cursos
-                            key={curso.id}
-                            curso={curso}
-                            isLoggedIn={true}
-                            id_usuario={userId}
-                        />
-                    ))
-                ) : (
-                    <p>No hay cursos disponibles en este momento.</p>
-                )}
-            </div>
-            <h2>Buscar Materias:</h2>
-            <BuscadorMaterias buscarMaterias={(palabrasClave) => buscarMaterias(palabrasClave, token)} />
-            {materias.length > 0 && (
-                <div className="contenedor-materias">
-                    {materias.map((materia) => (
-                        <div key={materia.id} className="materia-item">
-                            <h3>{materia.nombre}</h3>
-                            <p>Duración: {materia.duracion} meses</p>
-                            <p>Descripción: {materia.descripcion}</p>
-                            <p>Palabras clave: {materia.palabras_clave}</p>
-                        </div>
-                    ))}
+                    )}
                 </div>
-            )}
+                
+                <nav className="nav-menu">
+                    <a 
+                        href="#buscar" 
+                        className={`nav-item ${activeSection === 'buscar' ? 'active' : ''}`}
+                        onClick={() => handleNavClick('buscar')}
+                    >
+                        <span className="nav-icon">🔍</span>
+                        Buscar Materias
+                    </a>
+                    <a 
+                        href="#inscripciones" 
+                        className={`nav-item ${activeSection === 'inscripciones' ? 'active' : ''}`}
+                        onClick={() => handleNavClick('inscripciones')}
+                    >
+                        <span className="nav-icon">📚</span>
+                        Mis Inscripciones
+                    </a>
+                    <a 
+                        href="#cursos" 
+                        className={`nav-item ${activeSection === 'cursos' ? 'active' : ''}`}
+                        onClick={() => handleNavClick('cursos')}
+                    >
+                        <span className="nav-icon">🎓</span>
+                        Cursos Disponibles
+                    </a>
+                </nav>
+            </div>
+
+            <main className="main-content">
+                <header className="main-header">
+                    <div className="header-content">
+                        <h1>Portal de Aprendizaje</h1>
+                        <p>Bienvenido a tu espacio educativo personalizado</p>
+                    </div>
+                </header>
+
+                {error && <div className="error-mensaje">{error}</div>}
+                {isLoading ? (
+                    <div className="loading">Cargando...</div>
+                ) : (
+                    <div className="content-grid">
+                         <section id="buscar" className="content-section busqueda">
+                            <div className="section-header">
+                                <h2>Búsqueda de Materias</h2>
+                            </div>
+                            <div className="search-bar">
+                                <BuscadorMaterias buscarMaterias={buscarMaterias} />
+                            </div>
+                            {materias.length > 0 && (
+                                <div className="search-results-grid">
+                                    {materias.map((materia) => (
+                                        <div key={materia.id} className="search-result">
+                                            <h3>{materia.nombre}</h3>
+                                            <div className="info-group">
+                                                <p><strong>Duración:</strong> {materia.duracion} meses</p>
+                                                <p><strong>Descripción:</strong> {materia.descripcion}</p>
+                                            </div>
+                                            <div className="tags-container">
+                                                {materia.palabras_clave.split(',').map((tag, i) => (
+                                                    <span key={i} className="tag">{tag.trim()}</span>
+                                                ))}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </section>
+                        <section id="inscripciones" className="content-section inscripciones">
+                            <div className="section-header">
+                                <h2>Mis Inscripciones</h2>
+                                <div className="stats">
+                                    <span className="stat-item">
+                                        Total: {inscripciones.length}
+                                    </span>
+                                    <span className="stat-item active">
+                                        Activos: {inscripciones.length}
+                                    </span>
+                                </div>
+                            </div>
+                            <div className="cards-container">
+                                {inscripciones.map((inscripcion) => (
+                                    <div key={inscripcion.id} className="inscripcion-card">
+                                        <div className="card-banner">
+                                            <h3>{inscripcion.materia.nombre}</h3>
+                                            <span className="status-badge">Activo</span>
+                                        </div>
+                                        <div className="card-content">
+                                            <div className="info-group">
+                                                <div className="info-item">
+                                                    <span className="info-label">Instructor:</span>
+                                                    <span>{inscripcion.curso.instructor}</span>
+                                                </div>
+                                                <div className="info-item">
+                                                    <span className="info-label">Inicio:</span>
+                                                    <span>{formatDate(inscripcion.curso.fecha_inicio)}</span>
+                                                </div>
+                                                <div className="info-item">
+                                                    <span className="info-label">Fin:</span>
+                                                    <span>{formatDate(inscripcion.curso.fecha_fin)}</span>
+                                                </div>
+                                                <div className="info-item">
+                                                    <span className="info-label">Duración:</span>
+                                                    <span>{inscripcion.materia.duracion} meses</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                ))}
+                            </div>
+                        </section>
+
+                        <section id="cursos" className="content-section cursos">
+                            <div className="section-header">
+                                <h2>Cursos Disponibles</h2>
+                            </div>
+                            <div className="cards-container">
+                                {renderCursosDisponibles()}
+                            </div>
+                        </section>
+                    </div>
+                )}
+            </main>
         </div>
     );
 }

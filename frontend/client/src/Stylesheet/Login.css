@@ -10,7 +10,9 @@
 }
 
 .main {
-    width: 350px;
+    display: flex;
+    justify-content: center;
+    width: 500px; /* Ancho del contenedor */
     height: auto; /* Ajuste para permitir altura dinámica */
     background: #a72e2e; /* Color de fondo del contenedor */
     overflow: hidden;
@@ -24,7 +26,6 @@
 }
 
 .signup, .login {
-    position: relative;
     width: 100%;
     height: 100%;
 }
@@ -46,7 +47,6 @@ input {
     width: 100%; /* Aumento del ancho del input */
     height: 40px;
     background: #e0dede;
-    display: block;
     margin-bottom: 20px; /* Separación entre inputs */
     padding: 10px;
     border: none;
@@ -55,9 +55,9 @@ input {
 }
 
 .sign, .log {
+    display: block;
     width: 100%; /* Aumento del ancho del botón */
     height: 40px;
-    display: block;
     color: #fff;
     background: #434258; /* Color del botón */
     font-size: 1em;
@@ -75,9 +75,9 @@ input {
 }
 
 .login {
-    background: #fff; /* Fondo blanco para el formulario */
+    background: white; /* Fondo blanco para el formulario */
     border-radius: 10px;
-    padding: 20px;
+    padding: 50px;
 }
 
 .login label {

@@ -51,13 +51,15 @@ function App() {
     setIsLoggedIn(true);
     setIsAdmin(rol === "Administrador");
     setUserId(userId);
+    // Asegurarse de que el token se guarde en localStorage durante el login
+    // Esto debería estar en tu componente de login
   };
 
 
   
   const toggleInscripciones = () => {
     if (isAdmin) {/*
-      
+
       */
     }
     setMostrarInscripciones(!mostrarInscripciones);
@@ -68,50 +70,37 @@ function App() {
       try {
         const response = await fetch('http://host.docker.internal:8090/cursos');
         const data = await response.json();
-        
-        // Wait for the materias to be fetched
-        const cs = await fetchMaterias(data); // Wait for fetchMaterias to resolve
-        setCursos(cs); // Set the cursos state once materias are fetched
+        const cs = await fetchMaterias(data);
+        setCursos(cs);
       } catch (error) {
         console.error("Error al obtener cursos o materias:", error);
       }
     }
 
-    if (isLoggedIn) {
-      fetch(`http://host.docker.internal:8090/inscripciones_por_usuario/${userId}`, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((response) => response.json())
-        .then((data) => setInscripciones(data))
-        .catch((error) => console.error(error));
-    };
-
     obtenerCursos();
-  }, [isLoggedIn, userId]);
+  }, []);
 
   return (
     <div className="App">
       <div>
         <h1>CURSIFY - Encontra el mejor curso para vos</h1>
-        {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1>&&
-         <BotonCrearCurso />}
+        {isLoggedIn && isAdmin  && <h1>Bienvenido administrador</h1> && <BotonCrearCurso />}
         {!isLoggedIn && <BotonLogin handleLogin={handleLogin} />}
         {!isLoggedIn && <BotonRegister />}
         {!isAdmin && isLoggedIn && (
           <div>
             <div className="boton-insc">
-            <button onClick={toggleInscripciones}>Mis Inscripciones</button>
+              <button onClick={toggleInscripciones}>Mis Inscripciones</button>
             </div>
             {mostrarInscripciones && (
-              <Inscripciones inscripciones={inscripciones} inscripcionesTotales={inscripcionesTotales} />
+              <Inscripciones 
+                userId={userId}
+                // No necesitamos pasar el token por ahora
+              />
             )}
           </div>
         )}
-
-        {!isAdmin &&
+        {/*!isAdmin &&
           cursos.map((curso) => (
             <Cursos
               key={curso.id}
@@ -119,7 +108,7 @@ function App() {
               isLoggedIn={isLoggedIn}
               userId={userId}
             />
-          ))}
+          ))*/}
       </div>
     </div>
   );

@@ -37,7 +37,6 @@ function FormularioLogin({handleLogin}) {
           console.log('id usuario:', data.user_id);
 
             handleLogin(tipoUsuario, userId)
-            alert('Autenticacion exitosa');
           }else{
             alert('La autenticación fue incorrecta. Ingrese sus datos nuevamente');
           }

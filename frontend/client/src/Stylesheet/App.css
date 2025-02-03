@@ -72,3 +72,21 @@
     background-color: #45a049;
     transform: translateY(-3px);
 }
+
+.logout-button {
+    position: absolute;
+    top: 20px;
+    right: 20px;
+    padding: 10px 20px;
+    background: var(--error-color);
+    color: white;
+    border: none;
+    border-radius: var(--border-radius-md);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.logout-button:hover {
+    background: #dc2626;
+    transform: translateY(-2px);
+}
