@@ -13,6 +13,11 @@ function Inscripcion({ userId, token }) {
     const [userData, setUserData] = useState(null);
     const [activeSection, setActiveSection] = useState('buscar');
 
+    // Estado para comentarios
+    const [comentarios, setComentarios] = useState({});
+    const [nuevoComentario, setNuevoComentario] = useState({});
+
+
     // Agregar función formatDate
     const formatDate = (dateString) => {
         if (!dateString) return 'Fecha no disponible';
@@ -133,6 +138,94 @@ function Inscripcion({ userId, token }) {
             setIsLoading(false);
         }
     }, [userId]);
+
+    // Función para obtener comentarios por curso
+    const fetchComentarios = async (cursoId) => {
+        try {
+            const response = await fetch(`http://host.docker.internal:8090/comentarios/${cursoId}`);
+            if (!response.ok) throw new Error("Error al obtener comentarios");
+            const data = await response.json();
+            setComentarios((prev) => ({ ...prev, [cursoId]: data }));
+        } catch (error) {
+            console.error(`Error obteniendo comentarios para curso ${cursoId}:`, error);
+        }
+    };
+
+        // Cargar comentarios al montar el componente
+        useEffect(() => {
+            inscripciones.forEach((inscripcion) => {
+                fetchComentarios(inscripcion.curso_id);
+            });
+        }, [inscripciones]);
+
+        const handleInputChange = (cursoId, texto) => {
+            setNuevoComentario((prev) => ({ ...prev, [cursoId]: texto }));
+        };
+
+            // Enviar comentario
+    const handleComentarioSubmit = async (e, cursoId) => {
+        e.preventDefault();
+        if (!nuevoComentario[cursoId]?.trim()) return;
+
+        const comentarioData = {
+            curso_id: cursoId,
+            usuario_id: userId,
+            texto: nuevoComentario[cursoId],
+        };
+
+        try {
+            const response = await fetch("http://host.docker.internal:8090/comentarios", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(comentarioData),
+            });
+
+            if (!response.ok) throw new Error("Error al enviar comentario");
+
+            const comentarioGuardado = await response.json();
+            setComentarios((prev) => ({
+                ...prev,
+                [cursoId]: [...(prev[cursoId] || []), comentarioGuardado],
+            }));
+            setNuevoComentario((prev) => ({ ...prev, [cursoId]: "" }));
+        } catch (error) {
+            console.error("Error al enviar comentario:", error);
+        }
+    };
+    
+    const handleFileUpload = async (e, cursoId) => {
+        e.preventDefault();
+    
+        // Verificar si se seleccionó un archivo
+        if (!e.target.file.files[0]) {
+            alert("Por favor, selecciona un archivo antes de subirlo.");
+            return;
+        }
+    
+        const file = e.target.file.files[0]; // Archivo seleccionado
+        const formData = new FormData();
+        formData.append("file", file);
+        formData.append("curso_id", cursoId); // Agregar el curso_id
+    
+        try {
+            const response = await fetch("http://host.docker.internal:8090/upload-file", {
+                method: "POST",
+                body: formData,
+            });
+    
+            if (!response.ok) {
+                throw new Error("Error al subir el archivo");
+            }
+    
+            const data = await response.json();
+            console.log("Archivo subido con éxito:", data);
+            alert("Archivo subido correctamente.");
+            e.target.reset(); // Limpiar el formulario
+        } catch (error) {
+            console.error("Error al subir archivo:", error);
+            alert("Hubo un error al subir el archivo.");
+        }
+    };    
 
     const buscarCursosDisponibles = useCallback(async () => {
         try {
@@ -395,11 +488,54 @@ function Inscripcion({ userId, token }) {
                                                 </div>
                                             </div>
                                         </div>
+
+                                        {/* Sección de Comentarios */}
+                                        <div className="comentarios">
+                                            <h4>Comentarios</h4>
+                                            <ul>
+                                                {comentarios[inscripcion.curso_id]?.length > 0 ? (
+                                                    comentarios[inscripcion.curso_id].map((comentario) => (
+                                                        <li key={comentario.id}>
+                                                            <strong>{comentario.usuario.nombre}:</strong> {comentario.texto}
+                                                        </li>
+                                                    ))
+                                                ) : (
+                                                    <p>No hay comentarios aún.</p>
+                                                )}
+                                            </ul>
+
+                                            {/* Formulario para agregar comentario */}
+                                            <form onSubmit={(e) => handleComentarioSubmit(e, inscripcion.curso_id)}>
+                                                <textarea
+                                                    value={nuevoComentario[inscripcion.curso_id] || ""}
+                                                    onChange={(e) =>
+                                                        handleInputChange(inscripcion.curso_id, e.target.value)
+                                                    }
+                                                    placeholder="Escribe un comentario..."
+                                                    required
+                                                />
+                                                <button type="submit">Enviar</button>
+                                            </form>
+                                        </div>
+                                             {/* Formulario para subir archivos */}
+                        <form onSubmit={(e) => handleFileUpload(e, inscripciones.curso_id)}>
+                            <div>
+                                <label htmlFor={`file-upload-${inscripciones.curso_id}`}>
+                                    Subir archivo:
+                                </label>
+                                <input
+                                    type="file"
+                                    id={`file-upload-${inscripciones.curso_id}`}
+                                    name="file"
+                                    accept=".pdf,.doc,.docx,.jpg,.png"
+                                />
+                            </div>
+                            <button type="submit">Subir</button>
+                        </form>
                                     </div>
                                 ))}
                             </div>
                         </section>
-
                         <section id="cursos" className="content-section cursos">
                             <div className="section-header">
                                 <h2>Cursos Disponibles</h2>
